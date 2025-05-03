@@ -1,0 +1,175 @@
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import { Award, Briefcase, MapPin, Mail, ExternalLink, FileText, BookOpen, Calendar, Phone } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const About = () => {
+  // Founder information
+  const founderInfo = {
+    name: "Dr. Festus Kunkyin-Saadaari",
+    title: "CEO and Founder, Festari Group Limited",
+    image: "/lovable-uploads/a6a7726e-4c17-47d2-beef-4193ca9b8444.png",
+    bio: "Dr. Festus Kunkyin-Saadaari is the CEO and founder of Festari Group Limited, a company that provides innovative and sustainable solutions for the mining industry. He has over three years of experience as a lecturer and researcher at the University of Mines and Technology (UMaT), Tarkwa, where he teaches and supervises students in mining engineering topics and projects.",
+    education: [
+      { degree: "Ph.D. in Mining Engineering (Rock Mechanics Major)", institution: "University of Mines and Technology, Tarkwa", year: "2021" },
+      { degree: "B.Sc. in Mining Engineering", institution: "University of Mines and Technology, Tarkwa", year: "2015" },
+    ],
+    experience: [
+      { position: "CEO and Founder", organization: "Festari Group Limited", period: "2023-Present" },
+      { position: "Lecturer/Researcher", organization: "University of Mines and Technology, Tarkwa", period: "2021-Present" },
+      { position: "Postdoctoral Researcher", organization: "Missouri University of Science and Technology", period: "2022" },
+    ],
+    contactInfo: {
+      email: "festus@festari.com",
+      phone: "+233 240699535",
+      mobilePhone: "+1 5732026443",
+      location: "Tarkwa, Ghana"
+    },
+    vision: "My vision is to advance the knowledge and practice of mining engineering, and create positive social and environmental impacts through innovative and sustainable solutions for the mining industry."
+  };
+
+  // Recent publications
+  const recentPublications = [
+    {
+      title: "A Comparative Study on the Application of Intelligent Models in the Estimation of Backbreak in Mine Blasting Operations",
+      journal: "American Journal of Science, Engineering and Technology",
+      year: "2024",
+      url: "http://dx.doi.org/10.11648/j.ajset.20240901.11",
+    },
+    {
+      title: "Maintaining production levels in underground mining operations during pandemics - a case study",
+      journal: "Journal of the Ghana Institution of Engineering (JGhIE)",
+      year: "2024",
+      url: "http://dx.doi.org/10.56049/jghie.v24i1.138",
+    },
+    {
+      title: "Slope stability assessment of some waste rock dumps at a typical gold mine in Ghana",
+      journal: "Nigerian Journal of Technology",
+      year: "2023",
+      url: "http://dx.doi.org/10.4314/njt.v42i1.10",
+    },
+  ];
+
+  // Speaking engagements
+  const speakingEngagements = [
+    {
+      event: "AusIMM Tarkwa Student Chapter Webinar",
+      topic: "Ghana's Mining Investment",
+      location: "Virtual",
+      date: "2023",
+    },
+    {
+      event: "Mining Engineering Department Seminar",
+      topic: "Application of AI in Mining Engineering",
+      location: "University of Mines and Technology, Tarkwa",
+      date: "2022",
+    },
+    {
+      event: "Mining Industry Forum",
+      topic: "Sustainable Mining Practices",
+      location: "Accra, Ghana",
+      date: "2022",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header component */}
+      <Header />
+      <main className="flex-grow py-16 bg-gray-50">
+        <div className="container-custom">
+          {/* Page title */}
+          <h1 className="text-3xl font-display font-bold text-festari-900 mb-8 text-center">
+            About Us
+          </h1>
+          {/* Content section */}
+          <div className="text-festari-700 space-y-6">
+            <p>
+              Festari Hub is a multi-functional digital platform that serves as a real estate listing service, research and education hub, agriculture marketplace, and personal branding space. Our mission is to connect people with opportunities and resources to achieve their goals.
+            </p>
+            <p>
+              Whether you're looking to buy or rent a property, enroll in educational courses, explore agricultural products, or build your personal brand, Festari Hub is here to help.
+            </p>
+            <p>
+              Our team is dedicated to providing a seamless and user-friendly experience, ensuring that you have access to the best tools and services to succeed.
+            </p>
+          </div>
+        </div>
+      </main>
+      {/* Footer component */}
+      <Footer />
+    </div>
+  );
+};
+
+export default About;
+
+
+changed the Hero:
+
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ChevronRight, ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+
+const Hero = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  return <section className="relative min-h-screen flex items-center">
+      {/* Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-festari-900/90 to-festari-800/80 z-10"></div>
+        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?q=80&w=2073&auto=format&fit=crop" alt="Festari" className="w-full h-full object-cover object-center" />
+      </div>
+
+      {/* Content */}
+      <div className="container-custom relative z-20 pt-20 mx-[6px]">
+        <div className="max-w-3xl">
+          <span className={cn("inline-block py-1 px-3 rounded-full bg-mikado/20 text-mikado text-sm font-medium mb-6 transform transition-all duration-500 ease-out", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
+            Welcome to Festari Group Limited
+          </span>
+          
+          <h1 className={cn("text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 transform transition-all duration-700 delay-100 ease-out", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
+            Premiere Business Solutions Under <span className="text-mikado">One</span> Umbrella
+          </h1>
+          
+          <p className={cn("text-lg md:text-xl text-festari-100 mb-8 max-w-2xl transform transition-all duration-700 delay-200 ease-out", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
+            Discover a world of opportunities through our diverse business divisions: access cutting-edge research, explore premier real estate listings, connect with agricultural expertise, and leverage our comprehensive enterprise solutions.
+          </p>
+          
+          <div className={cn("flex flex-col sm:flex-row gap-4 transform transition-all duration-700 delay-300 ease-out", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
+            <Button asChild className="bg-chili hover:bg-chili/90 px-6 py-6 text-base" size="lg">
+              <Link to="/real-estate">
+                Explore Properties
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="bg-indigo/10 text-white border-white hover:bg-indigo/20 hover:text-white px-6 py-6 text-base flex items-center" size="lg">
+              <Link to="/research">
+                Research Hub <ChevronRight size={16} className="ml-1" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className={cn("flex items-center gap-2 mt-10 text-white/70 transform transition-all duration-700 delay-400 ease-out", isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
+            <Link to="/about" className="flex items-center gap-1 hover:text-mikado transition-colors">
+              Our Story <ArrowRight size={14} />
+            </Link>
+            <span className="text-white/30">•</span>
+            <Link to="/founder" className="flex items-center gap-1 hover:text-mikado transition-colors">
+              Meet Our Founder <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>;
+};
+
+export default Hero;
