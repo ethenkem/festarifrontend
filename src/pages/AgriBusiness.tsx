@@ -47,13 +47,18 @@ const AgriBusiness = () => {
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [agriServices, setAgriServices] = useState<any[]>([])
-  
+
 
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/v1/agriculture/agri-services/`)
       .then((response) => {
-        setAgriServices(response.data);
+        const mappedData = response.data.map((category: any) => ({
+          ...category,
+          IconComponent: iconMapping[category.icon] || null,
+          items: category.items
+        }));
+        setAgriServices(mappedData);
       })
       .catch((error) => {
         console.error("Error fetching agricultural services:", error);
@@ -176,7 +181,7 @@ const AgriBusiness = () => {
                       className="flex items-center gap-2 justify-start"
                       onClick={() => setActiveCategory(activeCategory === category.title ? null : category.title)}
                     >
-                      <category.icon size={18} />
+                      {category.IconComponent && <category.IconComponent className="w-6 h-6" />}
                       <span>{category.title}</span>
                     </Button>
                   ))}
@@ -198,7 +203,7 @@ const AgriBusiness = () => {
                       <div key={idx} className="space-y-6">
                         <div className="flex items-center gap-3">
                           <div className="p-2 rounded-lg bg-green-100 text-green-700">
-                            <category.icon size={24} />
+                            {category.IconComponent && <category.IconComponent className="w-6 h-6" />}
                           </div>
                           <div>
                             <h3 className="text-xl font-semibold">{category.title}</h3>
@@ -212,7 +217,7 @@ const AgriBusiness = () => {
                               key={serviceIdx}
                               title={service.title}
                               description={service.description}
-                              icon={service.icon || category.icon}
+                              icon={service.icon || iconMapping[category.icon]}
                               color="bg-green-100 text-green-700"
                               link={`/consultation?service=${encodeURIComponent(service.title)}&category=${encodeURIComponent(category.title)}`}
                             />
