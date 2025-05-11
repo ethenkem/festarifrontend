@@ -1,26 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Leaf, 
-  Tractor, 
-  Briefcase, 
-  Wrench, 
-  Beaker, 
-  Users, 
-  Factory, 
-  Sprout, 
-  ShoppingBag, 
-  Search, 
-  GraduationCap, 
-  Bug, 
-  DollarSign, 
-  LineChart, 
-  Home, 
-  FlowerIcon, 
-  PackageOpen, 
+import {
+  Leaf,
+  Tractor,
+  Briefcase,
+  Wrench,
+  Beaker,
+  Users,
+  Factory,
+  Sprout,
+  ShoppingBag,
+  Search,
+  GraduationCap,
+  Bug,
+  DollarSign,
+  LineChart,
+  Home,
+  FlowerIcon,
+  PackageOpen,
   Recycle,
   Download,
   MessageSquare
@@ -31,79 +31,45 @@ import ServiceGrid from '@/components/common/ServiceGrid';
 import ServiceCard from '@/components/common/ServiceCard';
 import ServiceCategory from '@/components/common/ServiceCategory';
 import ConsultationRequestForm from '@/components/common/ConsultationRequestForm';
+import axios from 'axios';
+import { BACKEND_URL } from '@/configs/constants';
 
-const agriServices = [
-  {
-    title: "Farming Operations",
-    icon: Tractor,
-    description: "Core agricultural production services",
-    items: [
-      { title: "Crop Farming", icon: Sprout, description: "Sustainable crop production and management" },
-      { title: "Livestock Farming", icon: Leaf, description: "Animal husbandry and livestock management" },
-      { title: "Greenhouse and Hydroponic Farming", icon: FlowerIcon, description: "Modern controlled environment agriculture" },
-      { title: "Organic Farming", icon: Leaf, description: "Certified organic cultivation practices" }
-    ]
-  },
-  {
-    title: "Business Services",
-    icon: Briefcase,
-    description: "Agricultural business development and support",
-    items: [
-      { title: "Agribusiness Consulting", icon: Briefcase, description: "Expert agricultural business advice" },
-      { title: "Agricultural Equipment Sales and Rental", icon: Wrench, description: "Quality farming equipment solutions" },
-      { title: "Farm Management Services", icon: Users, description: "Comprehensive farm operations management" },
-      { title: "Agribusiness Investment", icon: DollarSign, description: "Agricultural investment opportunities" },
-      { title: "Agricultural Marketing", icon: LineChart, description: "Strategic marketing for farm products" }
-    ]
-  },
-  {
-    title: "Technical Services",
-    icon: Beaker,
-    description: "Specialized agricultural technical support",
-    items: [
-      { title: "Crop and Soil Analysis", icon: Beaker, description: "Scientific testing of crops and soil" },
-      { title: "Pest and Disease Control", icon: Bug, description: "Integrated pest management solutions" },
-      { title: "Agricultural Research", icon: Search, description: "Innovative farming research and development" },
-      { title: "Sale of Agrochemicals", icon: PackageOpen, description: "Quality agricultural supplies and chemicals" }
-    ]
-  },
-  {
-    title: "Supply & Processing",
-    icon: Factory,
-    description: "Agricultural supply chain and processing services",
-    items: [
-      { title: "Agro-processing", icon: Factory, description: "Value-added agricultural processing" },
-      { title: "Farm-to-Table Sales", icon: ShoppingBag, description: "Direct marketing of farm produce" },
-      { title: "Agricultural Supply Chain Management", icon: PackageOpen, description: "Optimized supply chain solutions" },
-      { title: "Sustainable Agriculture", icon: Recycle, description: "Environmentally responsible farming practices" }
-    ]
-  },
-  {
-    title: "Education & Development",
-    icon: GraduationCap,
-    description: "Agricultural knowledge and community development",
-    items: [
-      { title: "Farm Education and Training", icon: GraduationCap, description: "Practical agricultural training programs" },
-      { title: "Rural Development", icon: Home, description: "Community agricultural development initiatives" }
-    ]
-  }
-];
+const iconMapping = {
+  Tractor: Tractor,
+  Briefcase: Briefcase,
+  Beaker: Beaker,
+  Factory: Factory,
+  GraduationCap: GraduationCap
+};
 
 const AgriBusiness = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [agriServices, setAgriServices] = useState<any[]>([])
   
+
+
+  useEffect(() => {
+    axios.get(`${BACKEND_URL}/v1/agriculture/agri-services/`)
+      .then((response) => {
+        setAgriServices(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching agricultural services:", error);
+      });
+  }, []);
+
   const handleSearch = (query: string) => {
     setSearchTerm(query);
-    
+
     if (!query.trim()) {
       setFilteredServices([]);
       return;
     }
-    
-    const results = agriServices.flatMap(category => 
-      category.items.filter(item => 
+
+    const results = agriServices.flatMap(category =>
+      category.items.filter(item =>
         item.title.toLowerCase().includes(query.toLowerCase()) ||
         (item.description && item.description.toLowerCase().includes(query.toLowerCase()))
       ).map(item => ({
@@ -111,7 +77,7 @@ const AgriBusiness = () => {
         category: category.title
       }))
     );
-    
+
     setFilteredServices(results);
   };
 
@@ -119,7 +85,7 @@ const AgriBusiness = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
-        <section 
+        <section
           className="relative py-20 text-white bg-cover bg-center"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&q=80')"
@@ -130,7 +96,7 @@ const AgriBusiness = () => {
             <div className="max-w-2xl mx-auto text-center">
               <h1 className="text-3xl md:text-4xl font-display font-bold mb-4">Festari Agribusiness</h1>
               <p className="text-white/90 mb-8">Sustainable farming solutions, agricultural expertise, and modern farming technologies for optimal yield and growth.</p>
-              
+
               <div className="relative max-w-xl mx-auto">
                 <input
                   type="text"
@@ -141,7 +107,7 @@ const AgriBusiness = () => {
                 />
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60" size={18} />
               </div>
-              
+
               {filteredServices.length > 0 && (
                 <div className="mt-4 bg-white text-festari-900 rounded-lg shadow-lg p-4 max-h-60 overflow-y-auto absolute z-10 left-0 right-0 mx-auto max-w-xl">
                   <p className="text-sm font-medium text-festari-600 mb-2">
@@ -149,8 +115,8 @@ const AgriBusiness = () => {
                   </p>
                   <div className="space-y-2">
                     {filteredServices.map((service, idx) => (
-                      <Link 
-                        key={idx} 
+                      <Link
+                        key={idx}
                         to={`/consultation?service=${encodeURIComponent(service.title)}&category=${encodeURIComponent(service.category)}`}
                         className="flex items-start p-2 hover:bg-festari-50 rounded group"
                       >
@@ -167,7 +133,7 @@ const AgriBusiness = () => {
                   </div>
                 </div>
               )}
-              
+
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Button asChild className="bg-white text-green-700 hover:bg-white/90">
                   <a href="#services">Our Services</a>
@@ -193,7 +159,7 @@ const AgriBusiness = () => {
                   <span>Consultation</span>
                 </TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="services" className="space-y-10">
                 <div className="text-center mb-8">
                   <h2 className="text-2xl font-display font-bold mb-3">Agricultural Services</h2>
@@ -201,10 +167,10 @@ const AgriBusiness = () => {
                     Comprehensive agriculture solutions from farming operations to business development and technical support
                   </p>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
                   {agriServices.map((category, idx) => (
-                    <Button 
+                    <Button
                       key={idx}
                       variant={activeCategory === category.title ? "default" : "outline"}
                       className="flex items-center gap-2 justify-start"
@@ -215,8 +181,8 @@ const AgriBusiness = () => {
                     </Button>
                   ))}
                   {activeCategory && (
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       className="text-festari-500"
                       onClick={() => setActiveCategory(null)}
                     >
@@ -224,7 +190,7 @@ const AgriBusiness = () => {
                     </Button>
                   )}
                 </div>
-                
+
                 <div className="space-y-12">
                   {agriServices
                     .filter(category => !activeCategory || category.title === activeCategory)
@@ -239,7 +205,7 @@ const AgriBusiness = () => {
                             <p className="text-festari-600 text-sm">{category.description}</p>
                           </div>
                         </div>
-                        
+
                         <ServiceGrid columns={3}>
                           {category.items.map((service, serviceIdx) => (
                             <ServiceCard
@@ -259,14 +225,14 @@ const AgriBusiness = () => {
 
               <TabsContent value="consultation">
                 <div className="max-w-3xl mx-auto">
-                  <ConsultationRequestForm 
+                  <ConsultationRequestForm
                     serviceCategories={[
                       {
                         title: "Agribusiness",
                         path: "/agribusiness",
                         description: "Agricultural business services",
-                        activities: agriServices.flatMap(category => 
-                          category.items.map(item => ({ 
+                        activities: agriServices.flatMap(category =>
+                          category.items.map(item => ({
                             title: item.title,
                             description: item.description
                           }))
@@ -281,7 +247,7 @@ const AgriBusiness = () => {
             </Tabs>
           </div>
         </section>
-        
+
         <section className="py-16 bg-green-50">
           <div className="container-custom">
             <div className="text-center mb-12">
@@ -290,7 +256,7 @@ const AgriBusiness = () => {
                 Our team combines agricultural expertise with modern techniques to deliver sustainable and profitable farming solutions
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-8 rounded-lg shadow-sm">
                 <div className="p-3 rounded-full bg-green-100 text-green-700 inline-block mb-4">
@@ -301,7 +267,7 @@ const AgriBusiness = () => {
                   We implement environmentally friendly farming methods that maintain long-term productivity while protecting natural resources.
                 </p>
               </div>
-              
+
               <div className="bg-white p-8 rounded-lg shadow-sm">
                 <div className="p-3 rounded-full bg-green-100 text-green-700 inline-block mb-4">
                   <LineChart size={24} />
@@ -311,7 +277,7 @@ const AgriBusiness = () => {
                   Our modern techniques and expert guidance help maximize yield and quality across all types of agricultural operations.
                 </p>
               </div>
-              
+
               <div className="bg-white p-8 rounded-lg shadow-sm">
                 <div className="p-3 rounded-full bg-green-100 text-green-700 inline-block mb-4">
                   <Briefcase size={24} />
@@ -324,7 +290,7 @@ const AgriBusiness = () => {
             </div>
           </div>
         </section>
-        
+
         <section className="py-16 bg-green-700 text-white">
           <div className="container-custom text-center">
             <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">

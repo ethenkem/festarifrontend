@@ -28,9 +28,7 @@ const ServiceCard = ({
       "hover:shadow-md group",
       className
     )}>
-      <div className={cn("p-2 rounded-lg w-12 h-12 flex items-center justify-center mb-4", color)}>
-        <Icon className="w-6 h-6" />
-      </div>
+
       <h3 className="text-lg font-semibold mb-2 group-hover:text-accent transition-colors">{title}</h3>
       {description && (
         <p className="text-muted-foreground text-sm mt-2 flex-grow">{description}</p>

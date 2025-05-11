@@ -8,6 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { constrainedMemory } from 'process';
+import axios from 'axios';
+import { BACKEND_URL } from '@/configs/constants';
 
 // Import necessary hooks and components
 const Register = () => {
@@ -24,11 +27,11 @@ const Register = () => {
   const navigate = useNavigate();
   // Toast hook for displaying notifications
   const { toast } = useToast();
-  
+
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
-    
+
     // Validate password and terms agreement
     if (password !== confirmPassword) {
       toast({
@@ -38,7 +41,7 @@ const Register = () => {
       });
       return;
     }
-    
+
     if (!agreeTerms) {
       toast({
         title: "Error",
@@ -47,19 +50,22 @@ const Register = () => {
       });
       return;
     }
-    
+
     setIsLoading(true); // Set loading state
-    
+
     // Simulate registration process
     try {
-      setTimeout(() => {
-        toast({
-          title: "Success",
-          description: "Your account has been created successfully.",
-        });
-        navigate('/login'); // Redirect to login page
-        setIsLoading(false); // Reset loading state
-      }, 1500);
+      const response = await axios.post(`${BACKEND_URL}/accounts/signup/`, {
+        email: email,
+        password: password
+      });
+      console.log(response.data);
+      toast({
+        title: "Success",
+        description: "Verification link has been sent to your email.",
+      });
+
+      setIsLoading(false); // Reset loading state
     } catch (error) {
       toast({
         title: "Error",
@@ -85,12 +91,12 @@ const Register = () => {
               Join Festari to explore properties, courses, and more
             </p>
           </div>
-          
+
           {/* Registration form */}
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               {/* Name input field */}
-              <div className="relative">
+              {/* <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <User className="h-5 w-5 text-festari-400" />
                 </div>
@@ -105,7 +111,8 @@ const Register = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
-              </div>
+              </div> *
+                /}
               
               {/* Email input field */}
               <div className="relative">
@@ -124,7 +131,7 @@ const Register = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              
+
               {/* Password input field */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -153,7 +160,7 @@ const Register = () => {
                   )}
                 </button>
               </div>
-              
+
               {/* Confirm Password input field */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -171,15 +178,14 @@ const Register = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
-              
+
               {/* Account Type selection */}
               <div className="space-y-2">
                 <p className="text-sm font-medium text-festari-700">Account Type</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div 
-                    className={`border rounded-md p-3 cursor-pointer transition-colors ${
-                      accountType === 'user' ? 'border-festari-accent bg-festari-50' : 'border-gray-200'
-                    }`}
+                  <div
+                    className={`border rounded-md p-3 cursor-pointer transition-colors ${accountType === 'user' ? 'border-festari-accent bg-festari-50' : 'border-gray-200'
+                      }`}
                     onClick={() => setAccountType('user')}
                   >
                     <div className="flex items-center justify-between">
@@ -191,11 +197,10 @@ const Register = () => {
                     </div>
                     <p className="text-xs text-festari-600 mt-1">Browse properties and enroll in courses</p>
                   </div>
-                  
-                  <div 
-                    className={`border rounded-md p-3 cursor-pointer transition-colors ${
-                      accountType === 'vendor' ? 'border-festari-accent bg-festari-50' : 'border-gray-200'
-                    }`}
+
+                  <div
+                    className={`border rounded-md p-3 cursor-pointer transition-colors ${accountType === 'vendor' ? 'border-festari-accent bg-festari-50' : 'border-gray-200'
+                      }`}
                     onClick={() => setAccountType('vendor')}
                   >
                     <div className="flex items-center justify-between">
@@ -214,8 +219,8 @@ const Register = () => {
             {/* Terms and conditions checkbox */}
             <div className="flex items-center">
               <div className="flex items-center h-5">
-                <Checkbox 
-                  id="terms" 
+                <Checkbox
+                  id="terms"
                   checked={agreeTerms}
                   onCheckedChange={(checked) => setAgreeTerms(checked === true)}
                 />
@@ -235,7 +240,7 @@ const Register = () => {
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
-            
+
             {/* Link to login page */}
             <div className="text-center text-sm">
               <span className="text-festari-600">Already have an account? </span>
