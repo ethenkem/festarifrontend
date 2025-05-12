@@ -133,7 +133,7 @@ const Research = () => {
     const fetchData = async () => {
       try {
         const [coursesResponse, researchResponse] = await Promise.all([
-          axios.get(`${BACKEND_URL}/v1/education/courses`),
+          axios.get(`${BACKEND_URL}/v1/education/courses/`),
           axios.get(`${BACKEND_URL}/v1/education/research-services/`)
         ]);
 
