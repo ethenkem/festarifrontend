@@ -51,60 +51,6 @@ import { BACKEND_URL } from '@/configs/constants';
 import axios from 'axios';
 import { log } from 'console';
 
-const courses = [
-  {
-    id: 'course1',
-    title: 'Real Estate Investment Fundamentals',
-    image: 'https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?auto=format&q=80',
-    description: 'Learn the basics of real estate investment strategies, market analysis, and financial evaluation.',
-    price: '$199',
-    duration: '6 Weeks',
-    level: 'Beginner',
-    instructor: 'Dr. James Wilson',
-    startDate: 'June 15, 2023',
-    enrolled: 125,
-    path: '/research/courses/investment-fundamentals',
-  },
-  {
-    id: 'course2',
-    title: 'Advanced Property Valuation',
-    image: 'https://images.unsplash.com/photo-1580894912989-0bc892f4efd0?auto=format&q=80',
-    description: 'Master the techniques for accurate property valuation, including comparative market analysis and income approach.',
-    price: '$249',
-    duration: '8 Weeks',
-    level: 'Advanced',
-    instructor: 'Prof. Sarah Johnson',
-    startDate: 'July 10, 2023',
-    enrolled: 94,
-    path: '/research/courses/property-valuation',
-  },
-  {
-    id: 'course3',
-    title: 'Real Estate Law and Regulations',
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&q=80',
-    description: 'Understand the legal framework governing real estate transactions, contracts, and dispute resolution.',
-    price: '$229',
-    duration: '7 Weeks',
-    level: 'Intermediate',
-    instructor: 'Prof. Michael Chen',
-    startDate: 'August 5, 2023',
-    enrolled: 78,
-    path: '/research/courses/real-estate-law',
-  },
-  {
-    id: 'course4',
-    title: 'Sustainable Development Practices',
-    image: 'https://images.unsplash.com/photo-1489674267075-cee793167910?auto=format&q=80',
-    description: 'Explore environmentally responsible approaches to property development and management.',
-    price: '$179',
-    duration: '5 Weeks',
-    level: 'Intermediate',
-    instructor: 'Dr. Emily Rodriguez',
-    startDate: 'September 12, 2023',
-    enrolled: 62,
-    path: '/research/courses/sustainable-development',
-  },
-];
 
 const publications = [
   {
@@ -164,7 +110,7 @@ const publications = [
   },
 ];
 
-const researchIconMapper = {  
+const researchIconMapper = {
   Helmet: HardHat,
   ChartLine: ChartLine,
   BrainCircuit: BrainCircuit,
@@ -181,21 +127,31 @@ const Research = () => {
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [researchServices, setResearchService] = useState<any[]>([]);
-
-
+  const [courses, setCourses] = useState<any[]>([])
+  
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/v1/education/research-services/`)
-      .then((response) => {
-        const mappedData = response.data.map((category: any) => ({
+    const fetchData = async () => {
+      try {
+        const [coursesResponse, researchResponse] = await Promise.all([
+          axios.get(`${BACKEND_URL}/v1/education/courses`),
+          axios.get(`${BACKEND_URL}/v1/education/research-services/`)
+        ]);
+
+        setCourses(coursesResponse.data);
+
+        const mappedResearch = researchResponse.data.map((category: any) => ({
           ...category,
           IconComponent: researchIconMapper[category.icon] || null,
-          items: category.items
+          items: category.items,
         }));
-        setResearchService(mappedData);
-      })
-      .catch((error) => {
-        console.error("Error fetching agricultural services:", error);
-      });
+        setResearchService(mappedResearch);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleSearch = (query: string) => {
@@ -221,7 +177,7 @@ const Research = () => {
   };
 
   const filteredCourses = courses.filter(course => {
-    const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch = course.course_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -412,7 +368,7 @@ const Research = () => {
                       <div className="h-48 relative overflow-hidden">
                         <img
                           src={course.image}
-                          alt={course.title}
+                          alt={course.course_name}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute top-4 right-4 bg-accent text-white text-xs font-bold py-1 px-2 rounded">
