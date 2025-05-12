@@ -1,45 +1,45 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  ShoppingCart, 
-  Truck as TruckIcon, 
-  Package, 
-  Store, 
-  BarChart3, 
-  ClipboardList, 
-  Users, 
-  ShoppingBag, 
-  Truck, 
-  Briefcase, 
-  CreditCard, 
-  UserCheck, 
-  Settings, 
-  Map, 
-  Package2, 
-  LineChart, 
-  BookOpen, 
-  Building, 
-  DollarSign, 
-  Scissors, 
-  Shirt, 
-  Trash2, 
-  Utensils, 
-  MessageSquare, 
-  Home, 
+import {
+  ShoppingCart,
+  Truck as TruckIcon,
+  Package,
+  Store,
+  BarChart3,
+  ClipboardList,
+  Users,
+  ShoppingBag,
+  Truck,
+  Briefcase,
+  CreditCard,
+  UserCheck,
+  Settings,
+  Map,
+  Package2,
+  LineChart,
+  BookOpen,
+  Building,
+  DollarSign,
+  Scissors,
+  Shirt,
+  Trash2,
+  Utensils,
+  MessageSquare,
+  Home,
   CalendarIcon,
-  Cherry, 
-  Globe, 
-  Smartphone, 
-  Hammer, 
-  Heart, 
+  Cherry,
+  Globe,
+  Smartphone,
+  Hammer,
+  Heart,
   BadgePercent,
-  Search, 
-  CheckCircle, 
-  User 
+  Search,
+  CheckCircle,
+  User
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -48,57 +48,10 @@ import ServiceGrid from '@/components/common/ServiceGrid';
 import ServiceCard from '@/components/common/ServiceCard';
 import ServiceCategory from '@/components/common/ServiceCategory';
 import ConsultationRequestForm from '@/components/common/ConsultationRequestForm';
+import axios from 'axios';
+import { BACKEND_URL } from '@/configs/constants';
+import { log } from 'console';
 
-const tradingServices = [
-  {
-    title: "Retail & Distribution",
-    icon: Store,
-    description: "Retail sales and distribution services",
-    items: [
-      { title: "Retail Sales", icon: ShoppingCart, description: "Consumer retail services" },
-      { title: "Wholesale Distribution", icon: Package, description: "B2B distribution services" },
-      { title: "Import and Export", icon: Globe, description: "International trade services" },
-      { title: "E-commerce Operations", icon: Smartphone, description: "Online retail solutions" },
-      { title: "General Trading and Merchandise", icon: ShoppingBag, description: "Merchandise services" }
-    ]
-  },
-  {
-    title: "Supply Chain",
-    icon: TruckIcon,
-    description: "Supply chain management and logistics",
-    items: [
-      { title: "Product Sourcing", icon: Search, description: "Supply chain solutions" },
-      { title: "Inventory Management", icon: ClipboardList, description: "Stock control services" },
-      { title: "Supply Chain Management", icon: Truck, description: "Supply chain optimization" },
-      { title: "Logistics and Distribution", icon: TruckIcon, description: "Distribution services" },
-      { title: "Vendor Relationships", icon: UserCheck, description: "Supplier relationship services" }
-    ]
-  },
-  {
-    title: "Business Operations",
-    icon: Briefcase,
-    description: "Business management and operational services",
-    items: [
-      { title: "Marketing and Promotion", icon: BadgePercent, description: "Promotional services" },
-      { title: "Customer Service", icon: MessageSquare, description: "Client support services" },
-      { title: "Product Quality Control", icon: CheckCircle, description: "Product quality assurance" },
-      { title: "Market Research", icon: BarChart3, description: "Market analysis services" },
-      { title: "Inventory Forecasting", icon: LineChart, description: "Inventory prediction services" },
-      { title: "Product Development", icon: Settings, description: "New product innovation" },
-      { title: "Business Expansion", icon: Building, description: "Growth consulting services" },
-      { title: "Trade Shows and Exhibitions", icon: Users, description: "Exhibition services" }
-    ]
-  },
-  {
-    title: "Financial Services",
-    icon: DollarSign,
-    description: "Financial and payment services",
-    items: [
-      { title: "Mobile Money Services", icon: Smartphone, description: "Digital financial services" },
-      { title: "Credit Transfer Services", icon: CreditCard, description: "Financial transfer services" }
-    ]
-  }
-];
 
 const serviceActivities = [
   {
@@ -146,19 +99,37 @@ const Enterprise = () => {
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('trading');
-  
+  const [tradingServices, setTradingServices] = useState<any[]>([])
+
+  useEffect(() => {
+    axios.get(`${BACKEND_URL}/v1/enterprise/trading/`)
+      .then((response) => {
+        console.log(response);
+
+        const mappedData = response.data.map((category: any) => ({
+          ...category,
+          //IconComponent: iconMapping[category.icon] || null,
+          items: category.items
+        }));
+        setTradingServices(mappedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching agricultural services:", error);
+      });
+  }, []);
+
   const handleSearch = (query: string) => {
     setSearchTerm(query);
-    
+
     if (!query.trim()) {
       setFilteredServices([]);
       return;
     }
-    
+
     const allServices = [...tradingServices, ...serviceActivities];
-    
-    const results = allServices.flatMap(category => 
-      category.items.filter(item => 
+
+    const results = allServices.flatMap(category =>
+      category.items.filter(item =>
         item.title.toLowerCase().includes(query.toLowerCase()) ||
         (item.description && item.description.toLowerCase().includes(query.toLowerCase()))
       ).map(item => ({
@@ -166,7 +137,7 @@ const Enterprise = () => {
         category: category.title
       }))
     );
-    
+
     setFilteredServices(results);
   };
 
@@ -174,7 +145,7 @@ const Enterprise = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
-        <section 
+        <section
           className="relative py-20 text-white bg-cover bg-center"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&q=80')"
@@ -186,7 +157,7 @@ const Enterprise = () => {
             <div className="max-w-2xl mx-auto text-center">
               <h1 className="text-3xl md:text-4xl font-display font-bold mb-4">Festari Enterprise</h1>
               <p className="text-white/90 mb-8">Comprehensive trading and service solutions for businesses and individuals.</p>
-              
+
               <div className="relative max-w-xl mx-auto">
                 <input
                   type="text"
@@ -197,7 +168,7 @@ const Enterprise = () => {
                 />
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60" size={18} />
               </div>
-              
+
               {filteredServices.length > 0 && (
                 <div className="mt-4 bg-white text-festari-900 rounded-lg shadow-lg p-4 max-h-60 overflow-y-auto absolute z-10 left-0 right-0 mx-auto max-w-xl">
                   <p className="text-sm font-medium text-festari-600 mb-2">
@@ -205,8 +176,8 @@ const Enterprise = () => {
                   </p>
                   <div className="space-y-2">
                     {filteredServices.map((service, idx) => (
-                      <Link 
-                        key={idx} 
+                      <Link
+                        key={idx}
                         to={`/consultation?service=${encodeURIComponent(service.title)}&category=${encodeURIComponent(service.category)}`}
                         className="flex items-start p-2 hover:bg-festari-50 rounded group"
                       >
@@ -223,7 +194,7 @@ const Enterprise = () => {
                   </div>
                 </div>
               )}
-              
+
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Button asChild variant="white" className="font-medium">
                   <a href="#services">Our Services</a>
@@ -249,7 +220,7 @@ const Enterprise = () => {
                   <span>Consultation</span>
                 </TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="services" className="space-y-10">
                 <div className="text-center mb-8">
                   <h2 className="text-2xl font-display font-bold mb-3">Enterprise Services</h2>
@@ -257,13 +228,13 @@ const Enterprise = () => {
                     Comprehensive trading and service solutions for businesses and individuals
                   </p>
                 </div>
-                
+
                 <div className="flex overflow-x-auto md:overflow-visible border-b border-festari-200 mb-8 pb-1">
                   <button
                     className={cn(
                       "py-3 px-6 font-medium text-sm border-b-2 transition-colors whitespace-nowrap",
-                      activeTab === 'trading' 
-                        ? "border-orange-500 text-orange-700" 
+                      activeTab === 'trading'
+                        ? "border-orange-500 text-orange-700"
                         : "border-transparent text-festari-600 hover:text-festari-900"
                     )}
                     onClick={() => setActiveTab('trading')}
@@ -273,11 +244,11 @@ const Enterprise = () => {
                       <span>Trading</span>
                     </div>
                   </button>
-                  <button
+                  {/*<button
                     className={cn(
                       "py-3 px-6 font-medium text-sm border-b-2 transition-colors whitespace-nowrap",
-                      activeTab === 'services' 
-                        ? "border-orange-500 text-orange-700" 
+                      activeTab === 'services'
+                        ? "border-orange-500 text-orange-700"
                         : "border-transparent text-festari-600 hover:text-festari-900"
                     )}
                     onClick={() => setActiveTab('services')}
@@ -286,12 +257,12 @@ const Enterprise = () => {
                       <Briefcase size={18} />
                       <span>Services</span>
                     </div>
-                  </button>
+                  </button> */}
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
                   {(activeTab === 'trading' ? tradingServices : serviceActivities).map((category, idx) => (
-                    <Button 
+                    <Button
                       key={idx}
                       variant={activeCategory === category.title ? "accent" : "outline"}
                       className="flex items-center gap-2 justify-start"
@@ -302,8 +273,8 @@ const Enterprise = () => {
                     </Button>
                   ))}
                   {activeCategory && (
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       className="text-festari-500"
                       onClick={() => setActiveCategory(null)}
                     >
@@ -311,7 +282,7 @@ const Enterprise = () => {
                     </Button>
                   )}
                 </div>
-                
+
                 <div className="space-y-12">
                   {(activeTab === 'trading' ? tradingServices : serviceActivities)
                     .filter(category => !activeCategory || category.title === activeCategory)
@@ -326,7 +297,7 @@ const Enterprise = () => {
                             <p className="text-festari-600 text-sm">{category.description}</p>
                           </div>
                         </div>
-                        
+
                         <ServiceGrid columns={3}>
                           {category.items.map((service, serviceIdx) => (
                             <ServiceCard
@@ -346,14 +317,14 @@ const Enterprise = () => {
 
               <TabsContent value="consultation">
                 <div className="max-w-3xl mx-auto">
-                  <ConsultationRequestForm 
+                  <ConsultationRequestForm
                     serviceCategories={[
                       {
                         title: "Enterprise",
                         path: "/enterprise",
                         description: "Trading and service solutions",
-                        activities: [...tradingServices, ...serviceActivities].flatMap(category => 
-                          category.items.map(item => ({ 
+                        activities: [...tradingServices, ...serviceActivities].flatMap(category =>
+                          category.items.map(item => ({
                             title: item.title,
                             description: item.description
                           }))
@@ -368,7 +339,7 @@ const Enterprise = () => {
             </Tabs>
           </div>
         </section>
-        
+
         <section className="py-16 bg-orange-50">
           <div className="container-custom">
             <div className="text-center mb-12">
@@ -377,7 +348,7 @@ const Enterprise = () => {
                 Our team combines business expertise with modern techniques to deliver efficient and profitable enterprise solutions
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-8 rounded-lg shadow-sm">
                 <div className="p-3 rounded-full bg-orange-100 text-orange-700 inline-block mb-4">
@@ -388,7 +359,7 @@ const Enterprise = () => {
                   We maintain high standards across all our trading and service operations to ensure customer satisfaction.
                 </p>
               </div>
-              
+
               <div className="bg-white p-8 rounded-lg shadow-sm">
                 <div className="p-3 rounded-full bg-orange-100 text-orange-700 inline-block mb-4">
                   <LineChart size={24} />
@@ -398,7 +369,7 @@ const Enterprise = () => {
                   Our strategic approach helps businesses scale operations and increase market presence effectively.
                 </p>
               </div>
-              
+
               <div className="bg-white p-8 rounded-lg shadow-sm">
                 <div className="p-3 rounded-full bg-orange-100 text-orange-700 inline-block mb-4">
                   <Users size={24} />
@@ -411,7 +382,7 @@ const Enterprise = () => {
             </div>
           </div>
         </section>
-        
+
         <section className="py-16 bg-orange-700 text-white">
           <div className="container-custom text-center">
             <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">

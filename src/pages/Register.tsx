@@ -180,7 +180,7 @@ const Register = () => {
               </div>
 
               {/* Account Type selection */}
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <p className="text-sm font-medium text-festari-700">Account Type</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div
@@ -213,7 +213,7 @@ const Register = () => {
                     <p className="text-xs text-festari-600 mt-1">List properties or agricultural products</p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Terms and conditions checkbox */}

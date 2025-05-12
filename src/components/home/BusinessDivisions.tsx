@@ -31,7 +31,7 @@ const divisions: DivisionProps[] = [
     icon: <BookOpen size={28} />,
     bgImage: "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&q=80",
     color: "chili",
-    link: "/research",
+    link: "/frci",
     delay: 0,
     keyServices: [
       "Geotechnical Engineering",
@@ -92,23 +92,23 @@ const divisions: DivisionProps[] = [
       "Mobile Money Services"
     ]
   },
-  {
-    title: "Services",
-    subtitle: "Festari Services",
-    description: "Wide range of professional services from logistics and delivery to event planning and personal care.",
-    icon: <Briefcase size={28} />,
-    bgImage: "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&q=80",
-    color: "mikado",
-    link: "/services",
-    delay: 600,
-    keyServices: [
-      "Delivery Services",
-      "Event Planning",
-      "Home Services",
-      "Personal Care",
-      "Digital Marketing"
-    ]
-  },
+  //{
+  //  title: "Services",
+  //  subtitle: "Festari Services",
+  //  description: "Wide range of professional services from logistics and delivery to event planning and personal care.",
+  //  icon: <Briefcase size={28} />,
+  //  bgImage: "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?auto=format&q=80",
+  //  color: "mikado",
+  //  link: "/services",
+  //  delay: 600,
+  //  keyServices: [
+  //    "Delivery Services",
+  //    "Event Planning",
+  //    "Home Services",
+  //    "Personal Care",
+  //    "Digital Marketing"
+  //  ]
+  //},
   {
     title: "Festari International Academy",
     subtitle: "Coming Soon",

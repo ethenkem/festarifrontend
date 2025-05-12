@@ -319,7 +319,7 @@ const Research = () => {
               <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8">
                 <TabsTrigger value="services">Services</TabsTrigger>
                 <TabsTrigger value="courses">Courses</TabsTrigger>
-                <TabsTrigger value="publications">Publications</TabsTrigger>
+                {/* <TabsTrigger value="publications">Publications</TabsTrigger> */}
                 <TabsTrigger value="consultation">Consultation</TabsTrigger>
               </TabsList>
 
