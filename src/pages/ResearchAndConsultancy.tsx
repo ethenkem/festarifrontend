@@ -36,7 +36,8 @@ import {
   LeafIcon,
   BrainCircuit,
   LineChart,
-  HardHatIcon
+  HardHatIcon,
+  ChartLine
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -163,14 +164,14 @@ const publications = [
   },
 ];
 
-const researchIconMapper = {
-  HardHatIcon,
-  LineChart,
-  BrainCircuit,
-  Leaf,
-  Users,
-  Stethoscope,
-  Gavel,
+const researchIconMapper = {  
+  Helmet: HardHat,
+  ChartLine: ChartLine,
+  BrainCircuit: BrainCircuit,
+  Leaf: Leaf,
+  Users: Users,
+  Stethoscope: Stethoscope,
+  Gavel: Gavel
 };
 
 const Research = () => {
@@ -185,8 +186,6 @@ const Research = () => {
   useEffect(() => {
     axios.get(`${BACKEND_URL}/v1/education/research-services/`)
       .then((response) => {
-        console.log(response.data);
-
         const mappedData = response.data.map((category: any) => ({
           ...category,
           IconComponent: researchIconMapper[category.icon] || null,
@@ -339,7 +338,7 @@ const Research = () => {
                       className="flex items-center gap-2 justify-start"
                       onClick={() => setActiveCategory(activeCategory === category.title ? null : category.title)}
                     >
-                      <category.icon size={18} />
+                      <category.IconComponent size={18} />
                       <span>{category.title}</span>
                     </Button>
                   ))}
@@ -361,7 +360,7 @@ const Research = () => {
                       <div key={idx} className="space-y-6">
                         <div className="flex items-center gap-3">
                           <div className="p-2 rounded-lg bg-indigo/10 text-indigo">
-                            <category.icon size={24} />
+                            <category.IconComponent size={24} />
                           </div>
                           <div>
                             <h3 className="text-xl font-semibold">{category.title}</h3>
@@ -375,7 +374,7 @@ const Research = () => {
                               key={serviceIdx}
                               title={service.title}
                               description={service.description}
-                              icon={service.icon || category.icon}
+                              icon={category.IconComponent}
                               color="bg-indigo/5 text-indigo"
                               link={`/consultation?service=${encodeURIComponent(service.title)}&category=${encodeURIComponent(category.title)}`}
                             />

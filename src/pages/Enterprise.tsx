@@ -94,6 +94,13 @@ const serviceActivities = [
   }
 ];
 
+const tradingIconMapper = {
+  Store: Store,
+  TruckIcon: TruckIcon,
+  Briefcase: Briefcase,
+  DollarSign: DollarSign
+};
+
 const Enterprise = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
@@ -108,7 +115,7 @@ const Enterprise = () => {
 
         const mappedData = response.data.map((category: any) => ({
           ...category,
-          //IconComponent: iconMapping[category.icon] || null,
+          IconComponent: tradingIconMapper[category.icon] || null,
           items: category.items
         }));
         setTradingServices(mappedData);
@@ -268,7 +275,7 @@ const Enterprise = () => {
                       className="flex items-center gap-2 justify-start"
                       onClick={() => setActiveCategory(activeCategory === category.title ? null : category.title)}
                     >
-                      <category.icon size={18} />
+                      <category.IconComponent size={18} />
                       <span>{category.title}</span>
                     </Button>
                   ))}
@@ -290,7 +297,7 @@ const Enterprise = () => {
                       <div key={idx} className="space-y-6">
                         <div className="flex items-center gap-3">
                           <div className="p-2 rounded-lg bg-orange-100 text-orange-700">
-                            <category.icon size={24} />
+                            <category.IconComponent size={24} />
                           </div>
                           <div>
                             <h3 className="text-xl font-semibold">{category.title}</h3>
@@ -304,7 +311,7 @@ const Enterprise = () => {
                               key={serviceIdx}
                               title={service.title}
                               description={service.description}
-                              icon={service.icon || category.icon}
+                              icon={service.icon || category.IconComponent}
                               color="bg-orange-100 text-orange-700"
                               link={`/consultation?service=${encodeURIComponent(service.title)}&category=${encodeURIComponent(category.title)}`}
                             />
