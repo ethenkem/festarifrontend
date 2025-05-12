@@ -1,26 +1,26 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  GraduationCap, 
-  BookOpen, 
-  FileText, 
-  User, 
-  Clock, 
-  Calendar, 
-  ExternalLink, 
-  CheckCircle, 
-  HardHat, 
-  Search, 
-  Leaf, 
-  Database, 
-  Shield, 
-  WrenchIcon, 
-  FileCheck, 
-  Wrench, 
+import {
+  GraduationCap,
+  BookOpen,
+  FileText,
+  User,
+  Clock,
+  Calendar,
+  ExternalLink,
+  CheckCircle,
+  HardHat,
+  Search,
+  Leaf,
+  Database,
+  Shield,
+  WrenchIcon,
+  FileCheck,
+  Wrench,
   Microscope,
   BookMarked,
   PenTool,
@@ -29,7 +29,14 @@ import {
   School,
   Briefcase,
   Presentation,
-  Filter
+  Filter,
+  Stethoscope,
+  Gavel,
+  Users,
+  LeafIcon,
+  BrainCircuit,
+  LineChart,
+  HardHatIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -39,67 +46,9 @@ import ServiceGrid from '@/components/common/ServiceGrid';
 import ServiceCard from '@/components/common/ServiceCard';
 import ServiceCategory from '@/components/common/ServiceCategory';
 import ConsultationRequestForm from '@/components/common/ConsultationRequestForm';
-
-const researchServices = [
-  {
-    title: "Mining & Engineering",
-    icon: HardHat,
-    description: "Expert services for mining operations and engineering projects",
-    items: [
-      { title: "Mining and Geotechnical Consulting", icon: Briefcase, description: "Expert consulting services for mining operations" },
-      { title: "Geotechnical Engineering", icon: WrenchIcon, description: "Specialized engineering solutions for ground stability" },
-      { title: "Mineral Exploration", icon: Search, description: "Comprehensive mineral exploration services" },
-      { title: "Geotechnical Instrumentation", icon: Wrench, description: "Advanced monitoring solutions for geological stability" },
-      { title: "Mining Equipment Sales and Rental", icon: Wrench, description: "Quality equipment solutions for mining operations" }
-    ]
-  },
-  {
-    title: "Research & Analysis",
-    icon: Microscope,
-    description: "Comprehensive research and analytical services",
-    items: [
-      { title: "Research and Development", icon: Microscope, description: "Innovative research programs for industry advancement" },
-      { title: "Geological and Geotechnical Data Analysis", icon: Database, description: "In-depth geological assessments and data processing" },
-      { title: "Market Analysis", icon: FileSpreadsheet, description: "Comprehensive market research for strategic planning" },
-      { title: "Safety Audits", icon: Shield, description: "Thorough safety evaluations and recommendations" },
-      { title: "Feasibility Studies", icon: Search, description: "Detailed project assessment and viability analysis" },
-      { title: "Data Analysis, Modeling and Interpretation", icon: Database, description: "Advanced data processing and predictive modeling" }
-    ]
-  },
-  {
-    title: "Education & Training",
-    icon: GraduationCap,
-    description: "Professional development and educational services",
-    items: [
-      { title: "Mining Education and Training", icon: School, description: "Professional development programs for mining" },
-      { title: "Training, Short Courses, and Capacity Building", icon: Presentation, description: "Targeted skills development programs" },
-      { title: "Professional and Proficiency Certification Programs", icon: FileCheck, description: "Industry-recognized certification programs" },
-      { title: "Academic Research Support Services", icon: BookMarked, description: "Assistance with academic research projects" }
-    ]
-  },
-  {
-    title: "Environmental & Safety",
-    icon: Leaf,
-    description: "Services focused on environmental protection and safety",
-    items: [
-      { title: "Environmental Impact Assessments", icon: Leaf, description: "Thorough environmental evaluations" },
-      { title: "Resource Management", icon: Briefcase, description: "Efficient resource allocation and management strategies" },
-      { title: "Geotechnical Remediation", icon: Wrench, description: "Site improvement and stabilization solutions" },
-      { title: "Mining, Geotechnical and Environmental Advisory Services", icon: Briefcase, description: "Expert consultation on environmental compliance" }
-    ]
-  },
-  {
-    title: "Documentation & Writing",
-    icon: FileText,
-    description: "Professional document preparation and management services",
-    items: [
-      { title: "Professional and Technical Writing Services", icon: PenTool, description: "Expert documentation services for technical content" },
-      { title: "Editing, Proofreading and Document Formatting", icon: FileText, description: "Quality assurance for written materials" },
-      { title: "Printing, Binding and Document Production", icon: Printer, description: "Professional document production services" },
-      { title: "Regulatory Compliance Documentation", icon: FileCheck, description: "Documentation preparation for regulatory requirements" }
-    ]
-  }
-];
+import { BACKEND_URL } from '@/configs/constants';
+import axios from 'axios';
+import { log } from 'console';
 
 const courses = [
   {
@@ -214,24 +163,53 @@ const publications = [
   },
 ];
 
+const researchIconMapper = {
+  HardHatIcon,
+  LineChart,
+  BrainCircuit,
+  Leaf,
+  Users,
+  Stethoscope,
+  Gavel,
+};
+
 const Research = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [courseLevel, setCourseLevel] = useState('All');
   const [publicationTag, setPublicationTag] = useState('All');
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  
+  const [researchServices, setResearchService] = useState<any[]>([]);
+
+
+  useEffect(() => {
+    axios.get(`${BACKEND_URL}/v1/education/research-services/`)
+      .then((response) => {
+        console.log(response.data);
+
+        const mappedData = response.data.map((category: any) => ({
+          ...category,
+          IconComponent: researchIconMapper[category.icon] || null,
+          items: category.items
+        }));
+        setResearchService(mappedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching agricultural services:", error);
+      });
+  }, []);
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    
+
     if (!query.trim()) {
       setFilteredServices([]);
       setActiveCategory(null);
       return;
     }
-    
-    const results = researchServices.flatMap(category => 
-      category.items.filter(item => 
+
+    const results = researchServices.flatMap(category =>
+      category.items.filter(item =>
         item.title.toLowerCase().includes(query.toLowerCase()) ||
         (item.description && item.description.toLowerCase().includes(query.toLowerCase()))
       ).map(item => ({
@@ -239,30 +217,30 @@ const Research = () => {
         category: category.title
       }))
     );
-    
+
     setFilteredServices(results);
   };
-  
+
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
-    
+      course.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.instructor.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchesLevel = courseLevel === 'All' || course.level === courseLevel;
-    
+
     return matchesSearch && matchesLevel;
   });
-  
+
   const filteredPublications = publications.filter(pub => {
     const matchesSearch = pub.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         pub.abstract.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         pub.authors.toLowerCase().includes(searchQuery.toLowerCase());
-    
+      pub.abstract.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      pub.authors.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchesTag = publicationTag === 'All' || pub.tags.some(tag => tag === publicationTag);
-    
+
     return matchesSearch && matchesTag;
   });
-  
+
   const allTags = Array.from(new Set(publications.flatMap(pub => pub.tags || [])));
 
   return (
@@ -270,7 +248,7 @@ const Research = () => {
       <Header />
       <main className="flex-grow">
         {/* Updated hero section with background image and indigo overlay */}
-        <section 
+        <section
           className="relative py-20 text-white bg-cover bg-center"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=3000&auto=format&fit=crop')"
@@ -285,7 +263,7 @@ const Research = () => {
               <p className="text-festari-100 mb-6">
                 Comprehensive solutions for mining engineering, research, and professional services
               </p>
-              
+
               <div className="relative max-w-xl mx-auto">
                 <Input
                   type="search"
@@ -296,7 +274,7 @@ const Research = () => {
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" size={18} />
               </div>
-              
+
               {filteredServices.length > 0 && (
                 <div className="mt-4 bg-white text-festari-900 rounded-lg shadow-lg p-4 max-h-60 overflow-y-auto absolute z-10 left-0 right-0 mx-auto max-w-xl">
                   <p className="text-sm font-medium text-festari-600 mb-2">
@@ -304,8 +282,8 @@ const Research = () => {
                   </p>
                   <div className="space-y-2">
                     {filteredServices.map((service, idx) => (
-                      <Link 
-                        key={idx} 
+                      <Link
+                        key={idx}
                         to={`/consultation?service=${encodeURIComponent(service.title)}&category=${encodeURIComponent(service.category)}`}
                         className="flex items-start p-2 hover:bg-festari-50 rounded group"
                       >
@@ -322,7 +300,7 @@ const Research = () => {
                   </div>
                 </div>
               )}
-              
+
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Button asChild variant="default" className="bg-white text-indigo hover:bg-white/90">
                   <Link to="/consultation">Request Consultation</Link>
@@ -344,7 +322,7 @@ const Research = () => {
                 <TabsTrigger value="publications">Publications</TabsTrigger>
                 <TabsTrigger value="consultation">Consultation</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="services" className="space-y-10">
                 <div className="text-center mb-8">
                   <h2 className="text-2xl font-display font-bold mb-3">Our Professional Services</h2>
@@ -352,10 +330,10 @@ const Research = () => {
                     Comprehensive services for mining engineering, research, and professional documentation
                   </p>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
                   {researchServices.map((category, idx) => (
-                    <Button 
+                    <Button
                       key={idx}
                       variant={activeCategory === category.title ? "default" : "outline"}
                       className="flex items-center gap-2 justify-start"
@@ -366,8 +344,8 @@ const Research = () => {
                     </Button>
                   ))}
                   {activeCategory && (
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       className="text-festari-500"
                       onClick={() => setActiveCategory(null)}
                     >
@@ -375,7 +353,7 @@ const Research = () => {
                     </Button>
                   )}
                 </div>
-                
+
                 <div className="space-y-10">
                   {researchServices
                     .filter(category => !activeCategory || category.title === activeCategory)
@@ -390,7 +368,7 @@ const Research = () => {
                             <p className="text-festari-600 text-sm">{category.description}</p>
                           </div>
                         </div>
-                        
+
                         <ServiceGrid columns={3}>
                           {category.items.map((service, serviceIdx) => (
                             <ServiceCard
@@ -413,7 +391,7 @@ const Research = () => {
                   <h2 className="text-2xl font-display font-bold text-festari-900">Educational Courses</h2>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-festari-600">Level:</span>
-                    <select 
+                    <select
                       className="p-2 border border-festari-200 rounded-md focus:outline-none focus:ring-1 focus:ring-accent text-sm"
                       value={courseLevel}
                       onChange={(e) => setCourseLevel(e.target.value)}
@@ -425,17 +403,17 @@ const Research = () => {
                     </select>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {filteredCourses.map((course) => (
-                    <div 
+                    <div
                       key={course.id}
                       className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col"
                     >
                       <div className="h-48 relative overflow-hidden">
-                        <img 
-                          src={course.image} 
-                          alt={course.title} 
+                        <img
+                          src={course.image}
+                          alt={course.title}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute top-4 right-4 bg-accent text-white text-xs font-bold py-1 px-2 rounded">
@@ -477,7 +455,7 @@ const Research = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 {filteredCourses.length === 0 && (
                   <div className="bg-white rounded-lg p-8 text-center">
                     <div className="flex justify-center mb-4">
@@ -485,7 +463,7 @@ const Research = () => {
                     </div>
                     <h3 className="text-xl font-semibold text-festari-800 mb-2">No courses found</h3>
                     <p className="text-festari-600 mb-4">Try adjusting your search criteria or filters</p>
-                    <button 
+                    <button
                       className="btn-primary"
                       onClick={() => {
                         setSearchQuery('');
@@ -497,13 +475,13 @@ const Research = () => {
                   </div>
                 )}
               </TabsContent>
-              
+
               <TabsContent value="publications" className="space-y-8">
                 <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
                   <h2 className="text-2xl font-display font-bold text-festari-900">Research Publications</h2>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-festari-600">Topic:</span>
-                    <select 
+                    <select
                       className="p-2 border border-festari-200 rounded-md focus:outline-none focus:ring-1 focus:ring-accent text-sm"
                       value={publicationTag}
                       onChange={(e) => setPublicationTag(e.target.value)}
@@ -515,10 +493,10 @@ const Research = () => {
                     </select>
                   </div>
                 </div>
-                
+
                 <div className="space-y-6">
                   {filteredPublications.map((publication) => (
-                    <div 
+                    <div
                       key={publication.id}
                       className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-300"
                     >
@@ -538,15 +516,15 @@ const Research = () => {
                           {publication.openAccess ? 'Open Access' : 'Subscription'}
                         </div>
                       </div>
-                      
+
                       <p className="text-sm text-festari-600 mb-4">
                         {publication.abstract}
                       </p>
-                      
+
                       <div className="flex flex-wrap gap-2 mb-4">
                         {publication.tags.map((tag) => (
-                          <span 
-                            key={tag} 
+                          <span
+                            key={tag}
                             className="bg-festari-100 text-festari-700 text-xs px-2 py-1 rounded"
                             onClick={() => setPublicationTag(tag)}
                           >
@@ -554,9 +532,9 @@ const Research = () => {
                           </span>
                         ))}
                       </div>
-                      
+
                       <div className="flex justify-end">
-                        <a 
+                        <a
                           href={publication.url}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -568,7 +546,7 @@ const Research = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 {filteredPublications.length === 0 && (
                   <div className="bg-white rounded-lg p-8 text-center">
                     <div className="flex justify-center mb-4">
@@ -576,7 +554,7 @@ const Research = () => {
                     </div>
                     <h3 className="text-xl font-semibold text-festari-800 mb-2">No publications found</h3>
                     <p className="text-festari-600 mb-4">Try adjusting your search criteria or filters</p>
-                    <button 
+                    <button
                       className="btn-primary"
                       onClick={() => {
                         setSearchQuery('');
@@ -591,14 +569,14 @@ const Research = () => {
 
               <TabsContent value="consultation" className="space-y-8">
                 <div className="max-w-3xl mx-auto">
-                  <ConsultationRequestForm 
+                  <ConsultationRequestForm
                     serviceCategories={[
                       {
                         title: "Research & Consultancy",
                         path: "/research",
                         description: "Professional research and consulting services",
-                        activities: researchServices.flatMap(category => 
-                          category.items.map(item => ({ 
+                        activities: researchServices.flatMap(category =>
+                          category.items.map(item => ({
                             title: item.title,
                             description: item.description
                           }))
@@ -613,7 +591,7 @@ const Research = () => {
             </Tabs>
           </div>
         </section>
-        
+
         <section className="py-16 bg-gradient-to-r from-festari-800 to-indigo text-white">
           <div className="container-custom text-center">
             <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">

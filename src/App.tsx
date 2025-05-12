@@ -68,7 +68,7 @@ const App = () => (
                 <EstatesAgency />
               </Suspense>
             } />
-            <Route path="/research/*" element={
+            <Route path="/frci/*" element={
               <Suspense fallback={<PageLoading />}>
                 <Research />
               </Suspense>

@@ -18,7 +18,7 @@ const carouselItems = [
     buttonLink: "/properties",
     buttonVariant: "chili" as const,
     secondaryButtonText: "Research Hub",
-    secondaryButtonLink: "/research",
+    secondaryButtonLink: "/frci",
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const carouselItems = [
     subtitle: "Expert Knowledge",
     description: "Access cutting-edge research and professional consultancy services",
     buttonText: "Learn More",
-    buttonLink: "/research",
+    buttonLink: "/frci",
     buttonVariant: "mikado" as const,
     secondaryButtonText: "Our Expertise",
     secondaryButtonLink: "/about",
