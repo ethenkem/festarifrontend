@@ -1,1 +1,1 @@
-export const BACKEND_URL = "https://festari.pythonanywhere.com";
+export const BACKEND_URL = "https://api.festarigroup.com";
