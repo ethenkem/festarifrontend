@@ -11,6 +11,7 @@ import { ScrollToTop } from '@/components/common/ScrollToTop';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Contact from "./pages/Contact"; // Import directly, no lazy loading
+import VerifyUser from "./pages/VerifyUser";
 
 // Lazy load other pages for better performance
 const EstatesAgency = lazy(() => import("./pages/EstatesAgency"));
@@ -58,10 +59,10 @@ const App = () => (
           <Routes>
             {/* Core routes in navigation order - Index is not lazy loaded for faster initial render */}
             <Route path="/" element={<Index />} />
-            
+
             {/* Contact is now directly imported, not lazy loaded */}
             <Route path="/contact" element={<Contact />} />
-            
+
             {/* Lazy loaded routes */}
             <Route path="/estates/*" element={
               <Suspense fallback={<PageLoading />}>
@@ -93,7 +94,7 @@ const App = () => (
                 <Founder />
               </Suspense>
             } />
-            
+
             {/* Supporting routes */}
             <Route path="/consultation" element={
               <Suspense fallback={<PageLoading />}>
@@ -110,20 +111,24 @@ const App = () => (
                 <Register />
               </Suspense>
             } />
+            <Route
+              path="/verify-user/:uid/:token"
+              element={<VerifyUser />}
+            />
             <Route path="/dashboard" element={
               <Suspense fallback={<PageLoading />}>
                 <Dashboard />
               </Suspense>
             } />
 
-            <Route 
+            <Route
               path="/properties" element={
                 <Suspense fallback={<PageLoading />}>
-                <Properties />
+                  <Properties />
                 </Suspense>
               }
             />
-            
+
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
