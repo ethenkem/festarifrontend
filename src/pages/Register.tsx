@@ -227,7 +227,7 @@ const Register = () => {
               </div>
               <div className="ml-3">
                 <Label htmlFor="terms" className="text-sm text-festari-600">
-                  I agree to the <a href="#" className="text-festari-accent hover:underline">Terms of Service</a> and <a href="#" className="text-festari-accent hover:underline">Privacy Policy</a>
+                  I agree to the <a href="/terms-of-service" className="text-festari-accent hover:underline">Terms of Service</a> and <a href="/privacy-policy" className="text-festari-accent hover:underline">Privacy Policy</a>
                 </Label>
               </div>
             </div>
