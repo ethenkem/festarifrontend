@@ -14,10 +14,13 @@ const ConsultationPage = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('request');
 
-  // Parse query parameters to pre-select category and service
   const searchParams = new URLSearchParams(location.search);
-  const categoryParam = searchParams.get('category');
   const serviceParam = searchParams.get('service');
+  const cat = searchParams.get("category")
+  console.log(serviceParam);
+  console.log(cat);
+
+
 
   return (
     <div className="min-h-screen flex flex-col">

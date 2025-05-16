@@ -14,6 +14,24 @@ type ConsultationRequestFormProps = {
   description?: string;
 };
 
+interface BaseService {
+  title: string;
+  description: string;
+  slug?: string; // If used in dropdown values
+}
+
+interface TradingService extends BaseService {
+  id: number;
+  category: string;
+  created_at: string;
+}
+
+interface ServicesData {
+  trading_services: TradingService[];
+  research_services: BaseService[];
+  agriculture_services: BaseService[];
+}
+
 const ConsultationRequestForm = ({
   className,
   variant = 'default',
@@ -32,7 +50,11 @@ const ConsultationRequestForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [services, setServices] = useState<any[]>([]);
+  const [servicesData, setServicesData] = useState<ServicesData>({
+    trading_services: [],
+    research_services: [],
+    agriculture_services: [],
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -46,9 +68,8 @@ const ConsultationRequestForm = ({
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get(`${BACKEND_URL}/v1/festari/services/`);
-        console.log(res.data);
-        setServices(res.data);
+        const res = await axios.get(`${BACKEND_URL}/v1/core/all-services/`);
+        setServicesData(res.data);
       } catch (error) {
 
       }
@@ -62,7 +83,7 @@ const ConsultationRequestForm = ({
       e.preventDefault();
       setIsSubmitting(true);
       const res = await axios.post(`${BACKEND_URL}/v1/consultations/consultation-request/`, formData)
-      console.log("Result", res.data);
+
       toast({
         title: "Consultation Request Submitted",
         description: "Thank you for your request. We will contact you within 48 hours. For urgent matters, call: 0207702157",
@@ -161,6 +182,7 @@ const ConsultationRequestForm = ({
           <label htmlFor="subject" className="block text-sm font-medium text-festari-700 mb-1">
             Subject *
           </label>
+
           <select
             id="subject"
             name="subject_or_service"
@@ -170,11 +192,42 @@ const ConsultationRequestForm = ({
             className="w-full px-3 py-2 border border-festari-200 rounded-md focus:outline-none focus:ring-2 focus:ring-festari-accent/50"
           >
             <option value="">Select a service</option>
-            {services.map((service, index) => (
-              <option key={index} value={service.slug}>
-                {service.name}
-              </option>))
-            }
+
+            {/* Trading Services */}
+            {Object.entries(
+              servicesData.trading_services.reduce((acc, service) => {
+                const cat = service.category || 'Uncategorized';
+                if (!acc[cat]) acc[cat] = [];
+                acc[cat].push(service);
+                return acc;
+              }, {})
+            ).map(([category, services]) => (
+              <optgroup key={category} label={`Trading — ${category.replace(/_/g, ' ')}`}>
+                {services.map((service) => (
+                  <option key={`trading-${service.id}`} value={service.title}>
+                    {service.title}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+            {/* Research Services */}
+            <optgroup label="Research Services">
+              {servicesData.research_services.map((service, index) => (
+                <option key={`research-${index}`} value={service.title}>
+                  {service.title}
+                </option>
+              ))}
+            </optgroup>
+
+            {/* Agriculture Services */}
+            <optgroup label="Agriculture Services">
+              {servicesData.agriculture_services.map((service, index) => (
+                <option key={`agriculture-${index}`} value={service.title}>
+
+                  {service.title}
+                </option>
+              ))}
+            </optgroup>
           </select>
         </div>
 

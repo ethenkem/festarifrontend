@@ -6,6 +6,8 @@ import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import axios from 'axios';
+import { BACKEND_URL } from '@/configs/constants';
 
 const Login = () => {
   // State hooks for form fields and visibility toggle
@@ -15,23 +17,26 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
     setIsLoading(true); // Set loading state
-    
+
     // Simulate login process
     try {
       // Mock authentication
-      setTimeout(() => {
-        toast({
-          title: "Success",
-          description: "You've been logged in successfully.",
-        });
-        navigate('/dashboard'); // Redirect to dashboard
-        setIsLoading(false); // Reset loading state
-      }, 1500);
+      const res = await axios.post(`${BACKEND_URL}/accounts/login`, {
+        email,
+        password
+      })
+      console.log(res.data);
+      toast({
+        title: "Success",
+        description: "You've been logged in successfully.",
+      });
+      navigate('/dashboard'); // Redirect to dashboard
+      setIsLoading(false); // Reset loading state
     } catch (error) {
       toast({
         title: "Error",
@@ -57,7 +62,7 @@ const Login = () => {
               Sign in to your Festari account
             </p>
           </div>
-          
+
           {/* Login form */}
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
@@ -78,7 +83,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              
+
               {/* Password input field */}
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -143,7 +148,7 @@ const Login = () => {
                 </>
               )}
             </Button>
-            
+
             <div className="text-center text-sm">
               <span className="text-festari-600">Don't have an account? </span>
               <Link to="/register" className="font-medium text-festari-accent hover:text-festari-accent/80">
