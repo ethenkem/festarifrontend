@@ -1,9 +1,12 @@
-import { useContext } from "react"
+import { useContext, createContext() } from "react"
+import { createContext } from "vm"
 
 
+const UserContext = createContext()
 
-export const UserContext = () => {
-  const context = useContext()
-  return <context.p
+export const UserProvider = ({ children }){
+  
+  return UserContext.p
 }
+
 
