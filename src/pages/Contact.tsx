@@ -11,10 +11,13 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { BACKEND_URL } from '@/configs/constants';
+import { log } from 'console';
 
 const Contact = () => {
   const { toast } = useToast();
-  
+
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -23,10 +26,10 @@ const Contact = () => {
     subject: '',
     message: '',
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
+
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -35,22 +38,22 @@ const Contact = () => {
       [name]: value,
     }));
   };
-  
+
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const res = await axios.post(`${BACKEND_URL}/v1/consultations/contact/`, formData)
+
       toast({
         title: "Message Sent",
         description: "Thank you for your inquiry. We'll respond shortly.",
       });
-      
+
       setIsSubmitting(false);
       setIsSubmitted(true);
-      
+
       // Reset form after a delay
       setTimeout(() => {
         setFormData({
@@ -61,10 +64,16 @@ const Contact = () => {
           message: '',
         });
         setIsSubmitted(false);
-      }, 3000);
-    }, 1500);
+      }, 1500);
+
+    } catch (error) {
+      toast({
+        title: "Message Failed",
+        description: "Submission failed please try again later and We'll respond shortly.",
+      });
+    }
   };
-  
+
   // Contact info
   const contactInfo = [
     {
@@ -94,7 +103,7 @@ const Contact = () => {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.6 } }
   };
-  
+
   const staggerChildren = {
     animate: {
       transition: {
@@ -110,7 +119,7 @@ const Contact = () => {
         {/* Hero section */}
         <section className="relative py-20 bg-gradient-to-br from-festari-900 to-festari-accent text-white overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1523966211575-eb4a01e7dd51?ixlib=rb-4.0.3&auto=format&fit=crop&w=1153&q=80')] bg-no-repeat bg-cover"></div>
-          
+
           <div className="container-custom relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -121,10 +130,10 @@ const Contact = () => {
               <Badge className="mb-6 bg-mikado/20 hover:bg-mikado/30 text-mikado border-mikado/20">Get In Touch</Badge>
               <h1 className="text-4xl md:text-5xl font-display font-bold mb-4 leading-tight">Let's Connect</h1>
               <p className="text-xl text-white/80 mb-8">
-                Have questions about our services, properties, or educational offerings? 
+                Have questions about our services, properties, or educational offerings?
                 We're here to help you find the perfect solution for your needs.
               </p>
-              
+
               <div className="flex flex-wrap gap-4">
                 <a href="#contact-form" className="inline-flex items-center gap-2 bg-mikado text-festari-900 px-5 py-2.5 rounded-lg font-medium hover:bg-mikado/90 transition-colors">
                   Send us a message <ArrowRight size={16} />
@@ -135,7 +144,7 @@ const Contact = () => {
               </div>
             </motion.div>
           </div>
-          
+
           {/* Decorative waves */}
           <div className="absolute bottom-0 left-0 w-full overflow-hidden">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[60px]">
@@ -149,7 +158,7 @@ const Contact = () => {
           <div className="container-custom">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               {/* Contact form */}
-              <motion.div 
+              <motion.div
                 id="contact-form"
                 className="lg:col-span-7"
                 initial="initial"
@@ -162,7 +171,7 @@ const Contact = () => {
                     <Mail className="mr-3 text-festari-accent" size={24} />
                     Send Us a Message
                   </h2>
-                  
+
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
@@ -196,7 +205,7 @@ const Contact = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <div>
                       <label htmlFor="phone" className="block text-sm font-medium text-festari-800 mb-1">
                         Phone Number
@@ -211,7 +220,7 @@ const Contact = () => {
                         placeholder="+233 XX XXX XXXX"
                       />
                     </div>
-                    
+
                     <div>
                       <label htmlFor="subject" className="block text-sm font-medium text-festari-800 mb-1">
                         Subject
@@ -236,7 +245,7 @@ const Contact = () => {
                         <option value="General Inquiry">General Inquiry</option>
                       </select>
                     </div>
-                    
+
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium text-festari-800 mb-1">
                         Your Message
@@ -252,14 +261,14 @@ const Contact = () => {
                         required
                       ></textarea>
                     </div>
-                    
+
                     <button
                       type="submit"
                       disabled={isSubmitting || isSubmitted}
                       className={cn(
                         "w-full p-4 rounded-md font-medium flex items-center justify-center gap-2 transition-all",
-                        isSubmitted 
-                          ? "bg-green-600 text-white hover:bg-green-700" 
+                        isSubmitted
+                          ? "bg-green-600 text-white hover:bg-green-700"
                           : "bg-festari-accent text-white hover:bg-festari-accent/90"
                       )}
                     >
@@ -280,9 +289,9 @@ const Contact = () => {
                   </form>
                 </div>
               </motion.div>
-              
+
               {/* Contact info */}
-              <motion.div 
+              <motion.div
                 id="contact-info"
                 className="lg:col-span-5"
                 initial="initial"
@@ -295,11 +304,11 @@ const Contact = () => {
                     <Phone className="mr-3 text-festari-accent" size={24} />
                     Contact Information
                   </h2>
-                  
+
                   <div className="space-y-8">
                     {contactInfo.map((info, index) => (
-                      <motion.div 
-                        key={index} 
+                      <motion.div
+                        key={index}
                         className="flex gap-4"
                         variants={fadeIn}
                       >
@@ -315,36 +324,36 @@ const Contact = () => {
                       </motion.div>
                     ))}
                   </div>
-                  
+
                   <Separator className="my-8 bg-festari-200" />
-                  
+
                   <div>
                     <h3 className="font-medium text-festari-900 mb-3 flex items-center">
                       <Globe className="mr-2 text-festari-accent" size={18} />
                       Follow Us
                     </h3>
                     <div className="flex gap-4">
-                      <a 
-                        href="#" 
-                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center" 
+                      <a
+                        href="#"
+                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center"
                         aria-label="Facebook"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
                           <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                         </svg>
                       </a>
-                      <a 
-                        href="#" 
-                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center" 
+                      <a
+                        href="#"
+                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center"
                         aria-label="Twitter"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
                           <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                         </svg>
                       </a>
-                      <a 
-                        href="https://www.linkedin.com/in/festus-kunkyin-saadaari-98462267/" 
-                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center" 
+                      <a
+                        href="https://www.linkedin.com/in/festus-kunkyin-saadaari-98462267/"
+                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center"
                         aria-label="LinkedIn"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -355,9 +364,9 @@ const Contact = () => {
                           <circle cx="4" cy="4" r="2"></circle>
                         </svg>
                       </a>
-                      <a 
-                        href="#" 
-                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center" 
+                      <a
+                        href="#"
+                        className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center"
                         aria-label="Instagram"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pink-600">
@@ -368,13 +377,13 @@ const Contact = () => {
                       </a>
                     </div>
                   </div>
-                  
+
                   <div className="mt-8 p-5 bg-white rounded-xl border border-festari-100/30">
                     <h3 className="font-medium text-festari-900 mb-3">Looking for our offices?</h3>
                     <p className="text-festari-700 text-sm mb-4">Visit us in Tarkwa, Ghana or schedule a virtual meeting at your convenience.</p>
-                    <a 
-                      href="https://maps.app.goo.gl/example123" 
-                      target="_blank" 
+                    <a
+                      href="https://maps.app.goo.gl/example123"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-festari-accent hover:underline font-medium"
                     >
@@ -391,17 +400,17 @@ const Contact = () => {
         <section className="py-0">
           <div className="h-96 w-full bg-festari-100 relative overflow-hidden">
             {/* Replace with actual map implementation */}
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63582.75883404705!2d-2.0152840947558645!3d5.3046661932176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfddfc12e4f7ef11%3A0x297bd8d50c4002a7!2sTarkwa%2C%20Ghana!5e0!3m2!1sen!2sus!4v1699988347255!5m2!1sen!2sus" 
-              width="100%" 
-              height="100%" 
-              style={{ border: 0 }} 
-              allowFullScreen 
-              loading="lazy" 
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63582.75883404705!2d-2.0152840947558645!3d5.3046661932176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfddfc12e4f7ef11%3A0x297bd8d50c4002a7!2sTarkwa%2C%20Ghana!5e0!3m2!1sen!2sus!4v1699988347255!5m2!1sen!2sus"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className="absolute inset-0"
             ></iframe>
-            
+
             {/* Map overlay */}
             <div className="absolute bottom-8 right-8 bg-white p-6 rounded-xl shadow-lg max-w-sm">
               <h3 className="font-bold text-festari-900 mb-2">Festari Group Limited</h3>
@@ -412,7 +421,7 @@ const Contact = () => {
             </div>
           </div>
         </section>
-        
+
         {/* FAQ or Additional Info Section */}
         <section className="py-20 bg-gradient-to-br from-gray-50 to-festari-50/20">
           <div className="container-custom">
@@ -423,7 +432,7 @@ const Contact = () => {
                 Explore our diverse services and opportunities across our subsidiaries.
               </p>
             </div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Link to="/research-and-consultancy" className="group">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all h-full border border-festari-100/20 group-hover:border-festari-accent/30">
@@ -432,7 +441,7 @@ const Contact = () => {
                   <p className="text-festari-600 text-sm">Expert advisory services for mining and technical sectors.</p>
                 </div>
               </Link>
-              
+
               <Link to="/estates-agency" className="group">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all h-full border border-festari-100/20 group-hover:border-festari-accent/30">
                   <Building className="w-10 h-10 text-festari-accent mb-4" />
@@ -440,7 +449,7 @@ const Contact = () => {
                   <p className="text-festari-600 text-sm">Premium property listings and real estate solutions.</p>
                 </div>
               </Link>
-              
+
               <Link to="/agri-business" className="group">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all h-full border border-festari-100/20 group-hover:border-festari-accent/30">
                   <Trees className="w-10 h-10 text-festari-accent mb-4" />
@@ -448,7 +457,7 @@ const Contact = () => {
                   <p className="text-festari-600 text-sm">Sustainable farming and agricultural initiatives.</p>
                 </div>
               </Link>
-              
+
               <Link to="/enterprise" className="group">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all h-full border border-festari-100/20 group-hover:border-festari-accent/30">
                   <Factory className="w-10 h-10 text-festari-accent mb-4" />
@@ -467,16 +476,16 @@ const Contact = () => {
 
 // Make sure to import these icons
 const Globe = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size || 24} 
-    height={size || 24} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size || 24}
+    height={size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className={className}
   >
     <circle cx="12" cy="12" r="10"></circle>
@@ -486,16 +495,16 @@ const Globe = ({ size, className }: { size?: number, className?: string }) => (
 );
 
 const School = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size || 24} 
-    height={size || 24} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size || 24}
+    height={size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className={className}
   >
     <path d="m4 6 8-4 8 4" />
@@ -508,16 +517,16 @@ const School = ({ size, className }: { size?: number, className?: string }) => (
 );
 
 const Trees = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size || 24} 
-    height={size || 24} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size || 24}
+    height={size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className={className}
   >
     <path d="M10 10v.2A3 3 0 0 1 8.9 16v0H5v0h0a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z" />
@@ -528,16 +537,16 @@ const Trees = ({ size, className }: { size?: number, className?: string }) => (
 );
 
 const Factory = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size || 24} 
-    height={size || 24} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size || 24}
+    height={size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className={className}
   >
     <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" />
@@ -548,16 +557,16 @@ const Factory = ({ size, className }: { size?: number, className?: string }) => 
 );
 
 const Building = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size || 24} 
-    height={size || 24} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size || 24}
+    height={size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className={className}
   >
     <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
@@ -575,16 +584,16 @@ const Building = ({ size, className }: { size?: number, className?: string }) =>
 );
 
 const Handshake = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size || 24} 
-    height={size || 24} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size || 24}
+    height={size || 24}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className={className}
   >
     <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
