@@ -51,65 +51,6 @@ import { BACKEND_URL } from '@/configs/constants';
 import axios from 'axios';
 import { log } from 'console';
 
-
-const publications = [
-  {
-    id: 'pub1',
-    title: 'Urban Housing Affordability in Developing Economies',
-    authors: 'Smith, J., Johnson, R., & Williams, M.',
-    journal: 'Journal of Urban Economics',
-    year: '2023',
-    abstract: 'This paper examines the challenges of housing affordability in rapidly urbanizing cities across developing economies, proposing policy frameworks for sustainable solutions.',
-    tags: ['Housing', 'Urban Policy', 'Development Economics'],
-    url: 'https://example.com/journal1',
-    openAccess: true,
-  },
-  {
-    id: 'pub2',
-    title: 'Property Valuation Models in Volatile Markets',
-    authors: 'Anderson, K., Thompson, S., & Zhang, L.',
-    journal: 'Real Estate Finance Journal',
-    year: '2022',
-    abstract: 'A comparative analysis of property valuation models and their effectiveness in accurately predicting market values during periods of high volatility.',
-    tags: ['Valuation', 'Market Analysis', 'Risk Assessment'],
-    url: 'https://example.com/journal2',
-    openAccess: false,
-  },
-  {
-    id: 'pub3',
-    title: 'Impact of Climate Change on Coastal Real Estate Markets',
-    authors: 'Rodriguez, E., Chen, M., & Patel, A.',
-    journal: 'Environmental Economics Review',
-    year: '2023',
-    abstract: 'This research investigates how climate change projections and associated risks are being priced into coastal property markets across different regions.',
-    tags: ['Climate Change', 'Coastal Properties', 'Risk Pricing'],
-    url: 'https://example.com/journal3',
-    openAccess: true,
-  },
-  {
-    id: 'pub4',
-    title: 'Technological Disruption in Commercial Real Estate',
-    authors: 'Morgan, D., Wilson, J., & Yamamoto, H.',
-    journal: 'Property Technology Review',
-    year: '2022',
-    abstract: 'An examination of how emerging technologies are transforming the commercial real estate sector, with case studies on proptech adoption and outcomes.',
-    tags: ['PropTech', 'Commercial Real Estate', 'Digital Transformation'],
-    url: 'https://example.com/journal4',
-    openAccess: false,
-  },
-  {
-    id: 'pub5',
-    title: 'Rental Housing Market Dynamics Post-Pandemic',
-    authors: 'Johnson, S., Barnes, T., & Li, W.',
-    journal: 'Housing Studies Quarterly',
-    year: '2023',
-    abstract: 'Analysis of shifting demand patterns in urban rental markets following the COVID-19 pandemic and implications for property investors and urban planners.',
-    tags: ['Rental Markets', 'Urban Planning', 'Post-Pandemic'],
-    url: 'https://example.com/journal5',
-    openAccess: true,
-  },
-];
-
 const researchIconMapper = {
   Helmet: HardHat,
   ChartLine: ChartLine,
@@ -128,17 +69,19 @@ const Research = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [researchServices, setResearchService] = useState<any[]>([]);
   const [courses, setCourses] = useState<any[]>([])
-  
+  const [publications, setPublications] = useState<any[]>([])
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [coursesResponse, researchResponse] = await Promise.all([
+        const [coursesResponse, researchResponse, publicationsResponse] = await Promise.all([
           axios.get(`${BACKEND_URL}/v1/education/courses/`),
-          axios.get(`${BACKEND_URL}/v1/education/research-services/`)
+          axios.get(`${BACKEND_URL}/v1/education/research-services/`),
+          axios.get((`${BACKEND_URL}/v1/education/publications/`))
         ]);
 
         setCourses(coursesResponse.data);
-
+        setPublications(publicationsResponse.data)
         const mappedResearch = researchResponse.data.map((category: any) => ({
           ...category,
           IconComponent: researchIconMapper[category.icon] || null,
