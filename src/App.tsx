@@ -14,6 +14,8 @@ import Contact from "./pages/Contact"; // Import directly, no lazy loading
 import VerifyUser from "./pages/VerifyUser";
 import TermsOfService from "./pages/TermOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Impressum from "./pages/Impressum";
+import RefundAndCookies from "./pages/RefundAndCookies";
 
 // Lazy load other pages for better performance
 const EstatesAgency = lazy(() => import("./pages/EstatesAgency"));
@@ -138,12 +140,26 @@ const App = () => (
                 </Suspense>
               }
             />
+            <Route path="/impressum" element={
+              <Suspense fallback={<PageLoading />}>
+                <Impressum />
+              </Suspense>
+            } />
 
             <Route
-              path="privacy-policy"
+              path="/privacy-policy"
               element={
                 <Suspense fallback={<PageLoading />}>
                   <PrivacyPolicy />
+                </Suspense>
+              }
+            />
+
+            <Route
+              path="/refund-and-cookies-policy"
+              element={
+                <Suspense fallback={<PageLoading />}>
+                  <RefundAndCookies />
                 </Suspense>
               }
             />

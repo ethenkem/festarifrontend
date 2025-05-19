@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils';
 
 const navigation = [
   { name: "Real Estates", href:"/properties", icon: <Home size={18} /> },
-  { name: "Research & Consultation", href: "/frci", icon: <BookOpen size={18} /> },
+  { name: "Research & Consultation", href: "/fcri", icon: <BookOpen size={18} /> },
   { name: "Agribusiness", href: "/agriculture", icon: <ShoppingCart size={18} /> },
   { name: "Enterprise", href: "/enterprise", icon: <Briefcase size={18} /> },
   { name: "About", href: "/about", icon: <User size={18} /> },
