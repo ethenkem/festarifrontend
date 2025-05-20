@@ -1,4 +1,3 @@
-
 // Import regular (non-lazy) components
 import { useState } from 'react';
 import Header from '@/components/layout/Header';
@@ -401,22 +400,22 @@ const Contact = () => {
           <div className="h-96 w-full bg-festari-100 relative overflow-hidden">
             {/* Replace with actual map implementation */}
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63582.75883404705!2d-2.0152840947558645!3d5.3046661932176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfddfc12e4f7ef11%3A0x297bd8d50c4002a7!2sTarkwa%2C%20Ghana!5e0!3m2!1sen!2sus!4v1699988347255!5m2!1sen!2sus"
+              src="https://www.google.com/maps/embed?pb=!1m26!1m12!1m3!1d662.8930928749102!2d-2.001098389400483!3d5.283137049719374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m11!3e6!4m3!3m2!1d5.2832837999999995!2d-2.0010411!4m5!1s0xfdd6f0fa1c75cab%3A0x709cee7b8c3008f4!2sTamso%20Estates%2C%20Tarkwa!3m2!1d5.2832694!2d-2.0010217999999997!5e0!3m2!1sen!2sgh!4v1747745157106!5m2!1sen!2sgh"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="absolute inset-0"
             ></iframe>
-
             {/* Map overlay */}
             <div className="absolute bottom-8 right-8 bg-white p-6 rounded-xl shadow-lg max-w-sm">
               <h3 className="font-bold text-festari-900 mb-2">Festari Group Limited</h3>
               <p className="text-festari-700">University of Mines and Technology, Tarkwa, Ghana</p>
               <Button className="mt-4 bg-festari-accent hover:bg-festari-accent/90 w-full">
-                <MapPin size={16} className="mr-2" /> Get Directions
+                <Link target='_blank' className="flex items-center" to={"https://www.google.com/maps/dir//Tamso+Estates,+Tarkwa/@5.283264,-2.0834238,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0xfdd6f0fa1c75cab:0x709cee7b8c3008f4!2m2!1d-2.0010218!2d5.2832694?hl=en-US&entry=ttu&g_ep=EgoyMDI1MDUxNS4wIKXMDSoASAFQAw%3D%3D"}>
+                  <MapPin size={16} className="mr-2" /> Get Directions
+                </Link>
               </Button>
             </div>
           </div>
