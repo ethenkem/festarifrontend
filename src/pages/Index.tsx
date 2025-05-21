@@ -32,7 +32,7 @@ const Index = () => {
 
   return (
     <>
-      <Helmet>
+      {/*<Helmet>
         <title>Festari Group Ltd - Innovating Africa’s Future</title>
         <meta
           name="description"
@@ -57,7 +57,7 @@ const Index = () => {
         />
         <meta name="twitter:image" content="https://www.festarigroup.com/logo-icon-black.png" />
         <meta name="twitter:url" content="https://www.festarigroup.com" />
-      </Helmet>
+      </Helmet> */}
       <div className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         {/* Header component */}
         <Header />
