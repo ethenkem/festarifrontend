@@ -79,7 +79,7 @@ const Contact = () => {
     {
       icon: MapPin,
       title: 'Our Location',
-      details: ['123 Festari Way, Suite 100', 'Tarkwa, Ghana'],
+      details: ['Festari Group, Tamso Estates', 'Tarkwa, Ghana'],
     },
     {
       icon: Phone,
