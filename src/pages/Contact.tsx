@@ -89,7 +89,7 @@ const Contact = () => {
     {
       icon: Mail,
       title: 'Email Addresses',
-      details: ['fksaadaari@festarigroup.com', 'info@festarigroup.com'],
+      details: ['info@festarigroup.com'],
     },
     {
       icon: Clock,
