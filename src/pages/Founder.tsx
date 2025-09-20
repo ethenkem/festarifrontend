@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Helmet } from "react-helmet"
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import {
@@ -30,6 +29,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
 import { FounderProfile } from '@/types/foundersData';
+import { Helmet } from 'react-helmet-async';
 
 // Dr. Festus Kunkyin-Saadaari data
 //const founderData = {
