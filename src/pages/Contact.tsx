@@ -1,6 +1,5 @@
 // Import regular (non-lazy) components
 import { useState } from 'react';
-import { Helmet } from "react-helmet"
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle, ArrowRight, ExternalLink, Import } from 'lucide-react';
@@ -14,6 +13,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
 import { log } from 'console';
+import { Helmet } from 'react-helmet-async';
 
 const Contact = () => {
   const { toast } = useToast();

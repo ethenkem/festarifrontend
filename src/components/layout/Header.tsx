@@ -174,38 +174,39 @@ const Header = () => {
           {/* Mobile Menu - improved spacing and button contrast */}
           <div className="md:hidden flex items-center space-x-2">
             {/* Mobile User Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={cn(
-                    "rounded-full",
-                    (isHomePage && !isScrolled) ? "text-white hover:bg-white/10" : "text-festari-900 hover:bg-festari-100/10"
-                  )}
-                >
-                  <User size={18} />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border border-festari-100 z-50">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/dashboard" className="w-full cursor-pointer">Dashboard</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/properties" className="w-full cursor-pointer">Saved Properties</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/research" className="w-full cursor-pointer">My Courses</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
+            {userData &&
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "rounded-full",
+                      (isHomePage && !isScrolled) ? "text-white hover:bg-white/10" : "text-festari-900 hover:bg-festari-100/10"
+                    )}
+                  >
+                    <User size={18} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-md border border-festari-100 z-50">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="w-full cursor-pointer">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/properties" className="w-full cursor-pointer">Saved Properties</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/research" className="w-full cursor-pointer">My Courses</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            }
             {/* Mobile Navigation Sheet */}
             <Sheet>
               <SheetTrigger asChild>
@@ -235,20 +236,20 @@ const Header = () => {
                     </Link>
                   ))}
                 </nav>
-
-                <div className="flex flex-col space-y-3 pt-6 mt-6 border-t border-festari-100">
-                  <Link to="/login" className="w-full">
-                    <Button variant="outline" className="w-full flex items-center justify-center">
-                      <LogIn className="mr-2" size={18} />
-                      Login
-                    </Button>
-                  </Link>
-                  <Link to="/register" className="w-full">
-                    <Button className="w-full bg-festari-accent hover:bg-festari-accent/90 text-white">
-                      Register
-                    </Button>
-                  </Link>
-                </div>
+                {!userData &&
+                  <div className="flex flex-col space-y-3 pt-6 mt-6 border-t border-festari-100">
+                    <Link to="/login" className="w-full">
+                      <Button variant="outline" className="w-full flex items-center justify-center">
+                        <LogIn className="mr-2" size={18} />
+                        Login
+                      </Button>
+                    </Link>
+                    <Link to="/register" className="w-full">
+                      <Button className="w-full bg-festari-accent hover:bg-festari-accent/90 text-white">
+                        Register
+                      </Button>
+                    </Link>
+                  </div>}
               </SheetContent>
             </Sheet>
           </div>
