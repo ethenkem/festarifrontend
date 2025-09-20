@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, User, ShoppingCart, BookOpen, Home, MapPin, LogIn, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Logo from '@/components/common/Logo';
 import { cn } from '@/lib/utils';
+import { clearUserInfo } from '@/utils/storage';
 
 const navigation = [
   { name: "Real Estates", href:"/properties", icon: <Home size={18} /> },
@@ -33,6 +34,7 @@ const navigation = [
 const Header = () => {
   const location = useLocation(); // Get the current route location
   const [isScrolled, setIsScrolled] = useState(false); // State to track if the page is scrolled
+  const navigate = useNavigate()
   const isMobile = useIsMobile(); // Hook to detect if the device is mobile
   
   const isHomePage = location.pathname === '/'; // Check if the current page is the homepage
@@ -47,6 +49,11 @@ const Header = () => {
     handleScroll(); // Check initial scroll position
     return () => window.removeEventListener('scroll', handleScroll); // Cleanup on unmount
   }, []);
+
+  const handleLogout = () => {
+    clearUserInfo()
+    navigate("/login")
+  };
 
   return (
     <header 
@@ -149,7 +156,7 @@ const Header = () => {
                   <Link to="/research" className="w-full cursor-pointer">My Courses</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -185,7 +192,7 @@ const Header = () => {
                   <Link to="/research" className="w-full cursor-pointer">My Courses</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Building, BookOpen, Bell, User, Search, Calendar, Heart, Settings, LogOut } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { getUserInfo } from '@/utils/storage';
 
 // Mock user data
 const userData = {
@@ -62,6 +63,14 @@ const Dashboard = () => {
   // State for managing active tab
   const [activeTab, setActiveTab] = useState("overview");
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = getUserInfo()
+    if (!user || Object.keys(user).length === 0) {
+      navigate("/login");
+    }
+  }, []);
 
   const handleNotificationClick = () => {
     toast({
@@ -133,7 +142,7 @@ const Dashboard = () => {
                     <Link to="/real-estate" className="text-xs text-festari-accent hover:underline">View all properties</Link>
                   </CardFooter>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium">Enrolled Courses</CardTitle>
@@ -146,7 +155,7 @@ const Dashboard = () => {
                     <Link to="/research" className="text-xs text-festari-accent hover:underline">Continue learning</Link>
                   </CardFooter>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium">Upcoming Viewings</CardTitle>
@@ -159,7 +168,7 @@ const Dashboard = () => {
                     <button className="text-xs text-festari-accent hover:underline">Manage schedule</button>
                   </CardFooter>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium">Notifications</CardTitle>
@@ -169,7 +178,7 @@ const Dashboard = () => {
                     <p className="text-xs text-muted-foreground">2 require action</p>
                   </CardContent>
                   <CardFooter className="pt-2">
-                    <button 
+                    <button
                       className="text-xs text-festari-accent hover:underline"
                       onClick={handleNotificationClick}
                     >
@@ -197,7 +206,7 @@ const Dashboard = () => {
                         <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start gap-4">
                       <div className="bg-festari-100 p-2 rounded-full">
                         <BookOpen size={20} className="text-festari-accent" />
@@ -208,7 +217,7 @@ const Dashboard = () => {
                         <p className="text-xs text-muted-foreground mt-1">Yesterday</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start gap-4">
                       <div className="bg-festari-100 p-2 rounded-full">
                         <Heart size={20} className="text-festari-accent" />
@@ -237,9 +246,9 @@ const Dashboard = () => {
                       <div key={property.id} className="border rounded-lg overflow-hidden group">
                         <div className="relative h-40 overflow-hidden">
                           <Link to={`/property/${property.id}`}>
-                            <img 
-                              src={property.image} 
-                              alt={property.title} 
+                            <img
+                              src={property.image}
+                              alt={property.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                           </Link>
@@ -291,20 +300,20 @@ const Dashboard = () => {
                       <div key={course.id} className="border rounded-lg p-4">
                         <h3 className="font-medium">{course.title}</h3>
                         <p className="text-sm text-muted-foreground">Instructor: {course.instructor}</p>
-                        
+
                         <div className="mt-3">
                           <div className="flex justify-between items-center mb-1 text-sm">
                             <span>Progress</span>
                             <span>{course.progress}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-festari-accent rounded-full h-2" 
+                            <div
+                              className="bg-festari-accent rounded-full h-2"
                               style={{ width: `${course.progress}%` }}
                             ></div>
                           </div>
                         </div>
-                        
+
                         <div className="mt-4 flex justify-between items-center">
                           <div>
                             <p className="text-xs text-muted-foreground">Next Lesson:</p>
@@ -357,7 +366,7 @@ const Dashboard = () => {
                         <User size={64} className="text-festari-400" />
                       </div>
                       <Button variant="outline" size="sm">Change Photo</Button>
-                      
+
                       <div className="mt-6 w-full">
                         <h3 className="text-sm font-medium mb-3">Account Options</h3>
                         <div className="space-y-2">
@@ -373,7 +382,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="md:w-2/3">
                       <div className="space-y-4">
                         <div>
@@ -392,7 +401,7 @@ const Dashboard = () => {
                           <label className="text-sm font-medium">Location</label>
                           <Input placeholder="Add your location" className="mt-1" />
                         </div>
-                        
+
                         <div className="pt-4">
                           <Button>Save Changes</Button>
                         </div>

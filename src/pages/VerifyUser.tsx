@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Check, X, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -26,7 +26,6 @@ function VerifyUser() {
             title: "Email verified successfully!",
             description: "Your account is now active, please wait to login",
           });
-          await new Promise((resolve) => setTimeout(resolve, 2000));
           navigate("/login");
         } catch (error) {
           setStatus("error");

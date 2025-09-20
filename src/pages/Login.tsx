@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
+import { storeUserInfo } from '@/utils/storage';
 
 const Login = () => {
   // State hooks for form fields and visibility toggle
@@ -23,9 +24,7 @@ const Login = () => {
     e.preventDefault(); // Prevent default form submission behavior
     setIsLoading(true); // Set loading state
 
-    // Simulate login process
     try {
-      // Mock authentication
       const res = await axios.post(`${BACKEND_URL}/accounts/login`, {
         email,
         password
@@ -35,6 +34,7 @@ const Login = () => {
         title: "Success",
         description: "You've been logged in successfully.",
       });
+      await storeUserInfo(res.data)
       navigate('/dashboard'); // Redirect to dashboard
       setIsLoading(false); // Reset loading state
     } catch (error) {
@@ -51,7 +51,7 @@ const Login = () => {
     <div className="min-h-screen flex flex-col">
       {/* Header component */}
       <Header />
-      <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <main className="flex-grow flex mt-20 items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md">
           {/* Form title and description */}
           <div className="text-center">

@@ -118,7 +118,7 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* Carousel background images/videos with animated transitions */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute bg-gray-900  inset-0 z-0">
         <AnimatePresence mode="wait">
           {carouselItems.map((item, index) => (
             activeIndex === index && (
