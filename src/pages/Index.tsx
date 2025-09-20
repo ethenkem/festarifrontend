@@ -1,4 +1,3 @@
-import { Helmet } from "react-helmet"
 import { useState, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -16,6 +15,7 @@ import CallToAction from '@/components/home/CallToAction';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
   // Page load animation state
@@ -32,32 +32,46 @@ const Index = () => {
 
   return (
     <>
-      {/*<Helmet>
+      <Helmet>
+        {/* Basic SEO */}
         <title>Festari Group Ltd - Innovating Africa’s Future</title>
         <meta
           name="description"
-          content="Welcome to Festari Group Ltd. We are an innovative, multidisciplinary company delivering business solutions across sectors like education, agribusiness, real estate, and more."
+          content="Festari Group Ltd delivers innovative, multidisciplinary business solutions across real estate, agriculture, education, and strategic trade in Ghana and Africa."
         />
         <meta
           name="keywords"
-          content="Festari Group, business solutions, innovation, real estate, agriculture, education, strategic trade, Ghana, Africa, sustainable business"
+          content="Festari Group, real estate, agriculture, education, trade, Ghana, Africa, sustainable business, innovation"
         />
+        <meta name="author" content="Festari Group Ltd" />
+        <link rel="canonical" href="https://www.festarigroup.com" />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph (Facebook/LinkedIn/WhatsApp) */}
         <meta property="og:title" content="Festari Group Ltd - Innovating Africa’s Future" />
         <meta
           property="og:description"
-          content="Discover Festari Group Ltd's comprehensive services, from real estate development to agribusiness, trade, and education. Our team brings transformative solutions to Africa."
+          content="Discover Festari Group’s expertise in real estate, agribusiness, trade, and education. Driving sustainable innovation across Africa."
         />
-        <meta property="og:image" content="https://www.festarigroup.com/logo-icon-black.png" />
+        <meta property="og:image" content="https://www.festarigroup.com/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://www.festarigroup.com" />
         <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_GB" />
+        <meta property="og:site_name" content="Festari Group Ltd" />
+
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Festari Group Ltd - Innovating Africa’s Future" />
         <meta
           name="twitter:description"
-          content="Explore Festari Group Ltd’s diverse business solutions designed to revolutionize Africa's economy through sustainable practices in education, real estate, and more."
+          content="Explore Festari Group’s business solutions in real estate, agriculture, education, and trade — transforming Africa’s economy sustainably."
         />
-        <meta name="twitter:image" content="https://www.festarigroup.com/logo-icon-black.png" />
+        <meta name="twitter:image" content="https://www.festarigroup.com/og-image.jpg" />
+        <meta name="twitter:site" content="@festari" />
         <meta name="twitter:url" content="https://www.festarigroup.com" />
-      </Helmet> */}
+      </Helmet>
       <div className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         {/* Header component */}
         <Header />

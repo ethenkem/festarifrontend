@@ -5,6 +5,7 @@ import App from './App.tsx'
 import './index.css'
 import { optimizePerformance } from './utils/optimizePerformance.ts'
 import { removeBrandingTag } from './utils/removeBranding.ts'
+import { HelmetProvider } from "react-helmet-async";
 
 // Run performance optimizations as early as possible
 optimizePerformance();
@@ -13,6 +14,8 @@ removeBrandingTag();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
   </React.StrictMode>,
 )
