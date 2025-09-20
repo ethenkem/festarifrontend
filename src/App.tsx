@@ -16,6 +16,7 @@ import TermsOfService from "./pages/TermOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Impressum from "./pages/Impressum";
 import RefundAndCookies from "./pages/RefundAndCookies";
+import EmailVerificationNotice from "./pages/EmailVerificationNotice";
 
 // Lazy load other pages for better performance
 const EstatesAgency = lazy(() => import("./pages/EstatesAgency"));
@@ -115,10 +116,16 @@ const App = () => (
                 <Register />
               </Suspense>
             } />
+            <Route path="/email-verification-notice" element={
+              <Suspense fallback={<PageLoading />}>
+                <EmailVerificationNotice />
+              </Suspense>
+            } />
             <Route
               path="/verify-user/:uid/:token"
               element={<VerifyUser />}
             />
+
             <Route path="/dashboard" element={
               <Suspense fallback={<PageLoading />}>
                 <Dashboard />

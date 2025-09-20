@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, User, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -8,14 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { constrainedMemory } from 'process';
 import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
 
 // Import necessary hooks and components
 const Register = () => {
   // State hooks for form fields and loading state
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,7 +23,6 @@ const Register = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   // Navigation hook for redirecting users
   const navigate = useNavigate();
-  // Toast hook for displaying notifications
   const { toast } = useToast();
 
   // Function to handle form submission
@@ -53,7 +50,6 @@ const Register = () => {
 
     setIsLoading(true); // Set loading state
 
-    // Simulate registration process
     try {
       const response = await axios.post(`${BACKEND_URL}/accounts/signup/`, {
         email: email,
@@ -66,6 +62,7 @@ const Register = () => {
       });
 
       setIsLoading(false); // Reset loading state
+      navigate("/email-verification-notice");
     } catch (error) {
       toast({
         title: "Error",
