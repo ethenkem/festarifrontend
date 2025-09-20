@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
 import { storeUserInfo } from '@/utils/storage';
+import { useAuth } from '@/context/auth-context';
 
 const Login = () => {
   // State hooks for form fields and visibility toggle
@@ -18,6 +19,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth()
 
   // Function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,12 +31,11 @@ const Login = () => {
         email,
         password
       })
-      console.log(res.data);
       toast({
         title: "Success",
         description: "You've been logged in successfully.",
       });
-      await storeUserInfo(res.data)
+      await login(res.data)
       navigate('/dashboard'); // Redirect to dashboard
       setIsLoading(false); // Reset loading state
     } catch (error) {

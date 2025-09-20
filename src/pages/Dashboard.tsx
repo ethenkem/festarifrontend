@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { getUserInfo } from '@/utils/storage';
+import { useAuth } from '@/context/auth-context';
 
 // Mock user data
 const userData = {
@@ -63,10 +64,10 @@ const Dashboard = () => {
   // State for managing active tab
   const [activeTab, setActiveTab] = useState("overview");
   const { toast } = useToast();
+  const { userData: user } = useAuth()
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = getUserInfo()
     if (!user || Object.keys(user).length === 0) {
       navigate("/login");
     }
@@ -83,7 +84,7 @@ const Dashboard = () => {
     <div className="min-h-screen flex flex-col">
       {/* Header component */}
       <Header />
-      <main className="flex-grow py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <main className="flex-grow mt-20 py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="container-custom">
           {/* Dashboard Header */}
           <div className="mb-8">

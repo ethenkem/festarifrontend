@@ -17,6 +17,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Impressum from "./pages/Impressum";
 import RefundAndCookies from "./pages/RefundAndCookies";
 import EmailVerificationNotice from "./pages/EmailVerificationNotice";
+import { AuthContextProvider } from "./context/auth-context";
 
 // Lazy load other pages for better performance
 const EstatesAgency = lazy(() => import("./pages/EstatesAgency"));
@@ -55,128 +56,130 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Router>
-          <ScrollToTop />
-          <Routes>
-            {/* Core routes in navigation order - Index is not lazy loaded for faster initial render */}
-            <Route path="/" element={<Index />} />
+    <AuthContextProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Router>
+            <ScrollToTop />
+            <Routes>
+              {/* Core routes in navigation order - Index is not lazy loaded for faster initial render */}
+              <Route path="/" element={<Index />} />
 
-            {/* Contact is now directly imported, not lazy loaded */}
-            <Route path="/contact" element={<Contact />} />
+              {/* Contact is now directly imported, not lazy loaded */}
+              <Route path="/contact" element={<Contact />} />
 
-            {/* Lazy loaded routes */}
-            <Route path="/estates/*" element={
-              <Suspense fallback={<PageLoading />}>
-                <EstatesAgency />
-              </Suspense>
-            } />
-            <Route path="/frci/*" element={
-              <Suspense fallback={<PageLoading />}>
-                <Research />
-              </Suspense>
-            } />
-            <Route path="/agriculture/*" element={
-              <Suspense fallback={<PageLoading />}>
-                <Agriculture />
-              </Suspense>
-            } />
-            <Route path="/enterprise/*" element={
-              <Suspense fallback={<PageLoading />}>
-                <Enterprise />
-              </Suspense>
-            } />
-            <Route path="/about" element={
-              <Suspense fallback={<PageLoading />}>
-                <About />
-              </Suspense>
-            } />
-            <Route path="/founder" element={
-              <Suspense fallback={<PageLoading />}>
-                <Founder />
-              </Suspense>
-            } />
-
-            {/* Supporting routes */}
-            <Route path="/consultation" element={
-              <Suspense fallback={<PageLoading />}>
-                <ConsultationPage />
-              </Suspense>
-            } />
-            <Route path="/login" element={
-              <Suspense fallback={<PageLoading />}>
-                <Login />
-              </Suspense>
-            } />
-            <Route path="/register" element={
-              <Suspense fallback={<PageLoading />}>
-                <Register />
-              </Suspense>
-            } />
-            <Route path="/email-verification-notice" element={
-              <Suspense fallback={<PageLoading />}>
-                <EmailVerificationNotice />
-              </Suspense>
-            } />
-            <Route
-              path="/verify-user/:uid/:token"
-              element={<VerifyUser />}
-            />
-
-            <Route path="/dashboard" element={
-              <Suspense fallback={<PageLoading />}>
-                <Dashboard />
-              </Suspense>
-            } />
-
-            <Route
-              path="/properties" element={
+              {/* Lazy loaded routes */}
+              <Route path="/estates/*" element={
                 <Suspense fallback={<PageLoading />}>
-                  <Properties />
+                  <EstatesAgency />
                 </Suspense>
-              }
-            />
-            <Route
-              path="terms-of-service"
-              element={
+              } />
+              <Route path="/frci/*" element={
                 <Suspense fallback={<PageLoading />}>
-                  <TermsOfService />
+                  <Research />
                 </Suspense>
-              }
-            />
-            <Route path="/impressum" element={
-              <Suspense fallback={<PageLoading />}>
-                <Impressum />
-              </Suspense>
-            } />
-
-            <Route
-              path="/privacy-policy"
-              element={
+              } />
+              <Route path="/agriculture/*" element={
                 <Suspense fallback={<PageLoading />}>
-                  <PrivacyPolicy />
+                  <Agriculture />
                 </Suspense>
-              }
-            />
-
-            <Route
-              path="/refund-and-cookies-policy"
-              element={
+              } />
+              <Route path="/enterprise/*" element={
                 <Suspense fallback={<PageLoading />}>
-                  <RefundAndCookies />
+                  <Enterprise />
                 </Suspense>
-              }
-            />
+              } />
+              <Route path="/about" element={
+                <Suspense fallback={<PageLoading />}>
+                  <About />
+                </Suspense>
+              } />
+              <Route path="/founder" element={
+                <Suspense fallback={<PageLoading />}>
+                  <Founder />
+                </Suspense>
+              } />
 
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-      </TooltipProvider>
-    </QueryClientProvider>
+              {/* Supporting routes */}
+              <Route path="/consultation" element={
+                <Suspense fallback={<PageLoading />}>
+                  <ConsultationPage />
+                </Suspense>
+              } />
+              <Route path="/login" element={
+                <Suspense fallback={<PageLoading />}>
+                  <Login />
+                </Suspense>
+              } />
+              <Route path="/register" element={
+                <Suspense fallback={<PageLoading />}>
+                  <Register />
+                </Suspense>
+              } />
+              <Route path="/email-verification-notice" element={
+                <Suspense fallback={<PageLoading />}>
+                  <EmailVerificationNotice />
+                </Suspense>
+              } />
+              <Route
+                path="/verify-user/:uid/:token"
+                element={<VerifyUser />}
+              />
+
+              <Route path="/dashboard" element={
+                <Suspense fallback={<PageLoading />}>
+                  <Dashboard />
+                </Suspense>
+              } />
+
+              <Route
+                path="/properties" element={
+                  <Suspense fallback={<PageLoading />}>
+                    <Properties />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="terms-of-service"
+                element={
+                  <Suspense fallback={<PageLoading />}>
+                    <TermsOfService />
+                  </Suspense>
+                }
+              />
+              <Route path="/impressum" element={
+                <Suspense fallback={<PageLoading />}>
+                  <Impressum />
+                </Suspense>
+              } />
+
+              <Route
+                path="/privacy-policy"
+                element={
+                  <Suspense fallback={<PageLoading />}>
+                    <PrivacyPolicy />
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/refund-and-cookies-policy"
+                element={
+                  <Suspense fallback={<PageLoading />}>
+                    <RefundAndCookies />
+                  </Suspense>
+                }
+              />
+
+              {/* Catch-all route */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </AuthContextProvider>
   </React.StrictMode>
 );
 
