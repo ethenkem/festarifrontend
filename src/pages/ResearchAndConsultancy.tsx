@@ -144,7 +144,7 @@ const Research = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow mt-20">
         {/* Updated hero section with background image and indigo overlay */}
         <section
           className="relative py-20 text-white bg-cover bg-center"
@@ -214,10 +214,8 @@ const Research = () => {
         <section className="py-16 bg-festari-50" id="services">
           <div className="container-custom">
             <Tabs defaultValue="services" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-8">
-                <TabsTrigger value="services">Services</TabsTrigger>
-                <TabsTrigger value="courses">Courses</TabsTrigger>
-                <TabsTrigger value="publications">Publications</TabsTrigger>
+              <TabsList className="flex md:space-x-10 border py-5 grid-cols-2 mb-8">
+                <TabsTrigger value="services">Research Services</TabsTrigger>
                 <TabsTrigger value="consultation">Consultation</TabsTrigger>
               </TabsList>
 
@@ -310,7 +308,7 @@ const Research = () => {
                     >
                       <div className="h-48 relative overflow-hidden">
                         <img
-                          src={course.image}
+                          src={`https://admin.festarigroup.com/${course.course_flyer}`}
                           alt={course.course_name}
                           className="w-full h-full object-cover"
                         />
@@ -374,96 +372,6 @@ const Research = () => {
                 )}
               </TabsContent>
 
-              <TabsContent value="publications" className="space-y-8">
-                <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
-                  <h2 className="text-2xl font-display font-bold text-festari-900">Research Publications</h2>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-festari-600">Topic:</span>
-                    <select
-                      className="p-2 border border-festari-200 rounded-md focus:outline-none focus:ring-1 focus:ring-accent text-sm"
-                      value={publicationTag}
-                      onChange={(e) => setPublicationTag(e.target.value)}
-                    >
-                      <option value="All">All Topics</option>
-                      {allTags.map((tag) => (
-                        <option key={tag} value={tag}>{tag}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  {filteredPublications.map((publication) => (
-                    <div
-                      key={publication.id}
-                      className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-300"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="text-lg font-semibold text-festari-900 mb-2">
-                            {publication.title}
-                          </h3>
-                          <p className="text-sm text-festari-700 mb-1">
-                            {publication.authors}
-                          </p>
-                          <p className="text-sm text-festari-600 mb-3">
-                            {publication.journal}, {publication.year}
-                          </p>
-                        </div>
-                        <div className="bg-festari-100 text-festari-800 px-3 py-1 rounded-full text-xs font-medium">
-                          {publication.openAccess ? 'Open Access' : 'Subscription'}
-                        </div>
-                      </div>
-
-                      <p className="text-sm text-festari-600 mb-4">
-                        {publication.abstract}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {publication.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="bg-festari-100 text-festari-700 text-xs px-2 py-1 rounded"
-                            onClick={() => setPublicationTag(tag)}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="flex justify-end">
-                        <a
-                          href={publication.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm flex items-center gap-1 text-accent hover:underline"
-                        >
-                          View Publication <ExternalLink size={14} />
-                        </a>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {filteredPublications.length === 0 && (
-                  <div className="bg-white rounded-lg p-8 text-center">
-                    <div className="flex justify-center mb-4">
-                      <FileText size={48} className="text-festari-300" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-festari-800 mb-2">No publications found</h3>
-                    <p className="text-festari-600 mb-4">Try adjusting your search criteria or filters</p>
-                    <button
-                      className="btn-primary"
-                      onClick={() => {
-                        setSearchQuery('');
-                        setPublicationTag('All');
-                      }}
-                    >
-                      Reset Filters
-                    </button>
-                  </div>
-                )}
-              </TabsContent>
 
               <TabsContent value="consultation" className="space-y-8">
                 <div className="max-w-3xl mx-auto">

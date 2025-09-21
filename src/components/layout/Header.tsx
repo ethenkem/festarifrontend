@@ -24,6 +24,7 @@ import { useAuth } from '@/context/auth-context';
 
 const navigation = [
   { name: "Real Estates", href: "/properties", icon: <Home size={18} /> },
+  { name: "Courses", href: "/courses", icon: <BookOpen size={18} /> },
   { name: "Research & Consultation", href: "/frci", icon: <BookOpen size={18} /> },
   { name: "Agribusiness", href: "/agriculture", icon: <ShoppingCart size={18} /> },
   { name: "Enterprise", href: "/enterprise", icon: <Briefcase size={18} /> },

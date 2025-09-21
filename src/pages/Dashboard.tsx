@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building, BookOpen, Bell, User, Search, Calendar, Heart, Settings, LogOut } from 'lucide-react';
+import { Building, BookOpen, Bell, User, Search, Calendar, Heart, Settings, LogOut, Plus } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -104,14 +104,9 @@ const Dashboard = () => {
                   className="flex items-center gap-1"
                   onClick={handleNotificationClick}
                 >
-                  <Bell size={16} />
-                  <Badge variant="secondary">
-                    {userData.notifications}
-                  </Badge>
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Settings size={16} className="mr-2" />
-                  Settings
+
+                  Add Property
+                  <Plus size={16} /> 
                 </Button>
               </div>
             </div>
@@ -122,8 +117,7 @@ const Dashboard = () => {
             <TabsList className="grid grid-cols-3 md:grid-cols-5 mb-8">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="properties">Properties</TabsTrigger>
-              <TabsTrigger value="courses">Courses</TabsTrigger>
-              <TabsTrigger value="calendar" className="hidden md:flex">Calendar</TabsTrigger>
+              {/* <TabsTrigger value="courses">Courses</TabsTrigger> */}
               <TabsTrigger value="profile" className="hidden md:flex">Profile</TabsTrigger>
             </TabsList>
 
@@ -289,6 +283,7 @@ const Dashboard = () => {
             </TabsContent>
 
             {/* Courses Tab */}
+            {/*
             <TabsContent value="courses" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -333,25 +328,7 @@ const Dashboard = () => {
                 </CardFooter>
               </Card>
             </TabsContent>
-
-            {/* Calendar Tab */}
-            <TabsContent value="calendar">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Schedule</CardTitle>
-                  <CardDescription>Upcoming viewings and course sessions</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center p-8">
-                    <Calendar size={64} className="mx-auto mb-4 text-festari-400" />
-                    <h3 className="text-lg font-medium mb-2">Calendar Coming Soon</h3>
-                    <p className="text-muted-foreground">
-                      We're working on a comprehensive calendar feature to help you manage your schedule more effectively.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+          */}
 
             {/* Profile Tab */}
             <TabsContent value="profile">

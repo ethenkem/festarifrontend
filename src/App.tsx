@@ -18,6 +18,7 @@ import Impressum from "./pages/Impressum";
 import RefundAndCookies from "./pages/RefundAndCookies";
 import EmailVerificationNotice from "./pages/EmailVerificationNotice";
 import { AuthContextProvider } from "./context/auth-context";
+import Courses from "./pages/Courses";
 
 // Lazy load other pages for better performance
 const EstatesAgency = lazy(() => import("./pages/EstatesAgency"));
@@ -79,6 +80,11 @@ const App = () => (
               <Route path="/frci/*" element={
                 <Suspense fallback={<PageLoading />}>
                   <Research />
+                </Suspense>
+              } />
+              <Route path="/courses/*" element={
+                <Suspense fallback={<PageLoading />}>
+                  <Courses />
                 </Suspense>
               } />
               <Route path="/agriculture/*" element={
