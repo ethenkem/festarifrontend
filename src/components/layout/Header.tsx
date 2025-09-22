@@ -157,12 +157,16 @@ const Header = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard" className="w-full cursor-pointer">Dashboard</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  
+                  {/*<DropdownMenuItem asChild>
                     <Link to="/properties" className="w-full cursor-pointer">Saved Properties</Link>
                   </DropdownMenuItem>
+                  */}
+                  {/*
                   <DropdownMenuItem asChild>
                     <Link to="/research" className="w-full cursor-pointer">My Courses</Link>
                   </DropdownMenuItem>
+                  */}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     Logout

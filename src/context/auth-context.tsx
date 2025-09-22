@@ -9,6 +9,7 @@ interface AuthContextType {
   userData: AuthResponse | null;
   login: (userData: AuthResponse) => Promise<void>;
   setUserData: (userData: AuthResponse) => void;
+  setNewUserData: (userData: AuthResponse) => Promise<void>;
   logout: () => void;
 }
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -31,9 +32,14 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
     setUserData(null)
     clearUserInfo()
   }
+  const setNewUserData = async (userData: AuthResponse) => {
+    clearUserInfo()
+    setUserData(userData)
+    await storeUserInfo(userData)
+  }
 
   return (
-    <AuthContext.Provider value={{ userData, setUserData, login, logout }}>
+    <AuthContext.Provider value={{ userData, setUserData, setNewUserData, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

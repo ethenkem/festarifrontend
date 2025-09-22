@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
+import Lottie from "lottie-react";
 import {
   GraduationCap,
   User,
@@ -10,9 +11,11 @@ import {
   Search,
 
 } from 'lucide-react';
+import festariLoading from "../assets/loading colour.json"
 import { Input } from '@/components/ui/input';
 import { BACKEND_URL } from '@/configs/constants';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
 interface Course {
@@ -26,11 +29,14 @@ interface Course {
   instructor: string;
   start_date: string;
   enrolled: number;
+  enrollment_link: string;
 }
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [courseLevel, setCourseLevel] = useState('All');
   const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const lottieRef = useRef(null);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -39,6 +45,8 @@ const Courses = () => {
         setCourses(res.data);
       } catch (err) {
         console.error("Error fetching courses:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCourses();
@@ -100,48 +108,59 @@ const Courses = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {filteredCourses.map(course => (
-                    <div key={course.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
-                      <div className="h-48 relative overflow-hidden">
-                        <img
-                          src={course.course_flyer.startsWith('http') ? course.course_flyer : `https://admin.festarigroup.com/${course.course_flyer}`}
-                          alt={course.course_name}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-4 right-4 bg-accent text-white text-xs font-bold py-1 px-2 rounded">{course.level}</div>
-                      </div>
-                      <div className="p-6 flex-1 flex flex-col">
-                        <h3 className="text-lg font-semibold text-festari-900 mb-2">{course.course_name}</h3>
-                        <p className="text-sm text-festari-600 mb-4">{course.description}</p>
+                  {loading ?
+                    <div className="flex justify-start w-full px-4">
+                      <Lottie
+                        size={10}
+                        lottieRef={lottieRef}
+                        animationData={festariLoading}
+                        loop={false}
+                      />
+                    </div> :
+                    filteredCourses.map(course => (
+                      <div key={course.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+                        <div className="h-48 relative overflow-hidden">
+                          <img
+                            src={course.course_flyer.startsWith('http') ? course.course_flyer : `https://admin.festarigroup.com/${course.course_flyer}`}
+                            alt={course.course_name}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute top-4 right-4 bg-accent text-white text-xs font-bold py-1 px-2 rounded">{course.level}</div>
+                        </div>
+                        <div className="p-6 flex-1 flex flex-col">
+                          <h3 className="text-lg font-semibold text-festari-900 mb-2">{course.course_name}</h3>
+                          <p className="text-sm text-festari-600 mb-4">{course.description}</p>
 
-                        <div className="grid grid-cols-2 gap-3 mb-4">
-                          <div className="flex items-center gap-2">
-                            <User size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">{course.instructor}</span>
+                          <div className="grid grid-cols-2 gap-3 mb-4">
+                            <div className="flex items-center gap-2">
+                              <User size={14} className="text-festari-500" />
+                              <span className="text-sm text-festari-700">{course.instructor}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Clock size={14} className="text-festari-500" />
+                              <span className="text-sm text-festari-700">{course.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Calendar size={14} className="text-festari-500" />
+                              <span className="text-sm text-festari-700">Starts: {new Date(course.start_date).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <GraduationCap size={14} className="text-festari-500" />
+                              <span className="text-sm text-festari-700">{course.enrolled} enrolled</span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Clock size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">{course.duration}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Calendar size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">Starts: {new Date(course.start_date).toLocaleDateString()}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <GraduationCap size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">{course.enrolled} enrolled</span>
+
+                          <div className="flex items-center justify-between mt-auto pt-4 border-t border-festari-100">
+                            <span className="text-lg font-bold text-accent">{course.price}</span>
+                            <button className="text-sm text-white bg-accent hover:bg-accent/90 px-4 py-2 rounded transition-colors">
+                              <Link target='_blank' to={course.enrollment_link}>
+                                Enroll Now
+                              </Link>
+                            </button>
                           </div>
                         </div>
-
-                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-festari-100">
-                          <span className="text-lg font-bold text-accent">{course.price}</span>
-                          <button className="text-sm text-white bg-accent hover:bg-accent/90 px-4 py-2 rounded transition-colors">
-                            Enroll Now
-                          </button>
-                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
 
                 {filteredCourses.length === 0 && (

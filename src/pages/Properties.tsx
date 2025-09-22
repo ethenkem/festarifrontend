@@ -1,15 +1,28 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { Search, Home, Building, Map, Filter, ChevronDown } from 'lucide-react';
+import { Search, Home, Building, Map, Filter, ChevronDown, X, User, Phone, Mail, DollarSign } from 'lucide-react';
 import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
+import { useAuth } from '@/context/auth-context';
 
 const Properties = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [priceRange, setPriceRange] = useState('All');
-  const [properties, setProperties] = useState([])
+  const [properties, setProperties] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { userData } = useAuth()
+  const [offerData, setOfferData] = useState({
+    amount: '',
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     console.log("checking");
@@ -27,7 +40,7 @@ const Properties = () => {
       }
     };
 
-    fetchProperties();
+    fetchProperties(); 
   }, []);
 
   // Filter properties based on search term and filters
@@ -46,6 +59,65 @@ const Properties = () => {
 
     return matchesSearch && matchesType && matchesPrice;
   });
+
+  const handleMakeOffer = (property) => {
+    if (!userData) {
+      // Redirect to login page
+      window.location.href = '/login'; // or use your routing method
+      return;
+    }
+
+    setSelectedProperty(property);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProperty(null);
+    setOfferData({
+      amount: '',
+      name: '',
+      email: '',
+      phone: '',
+      message: ''
+    });
+  };
+
+  const handleOfferSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const offerPayload = {
+        property_id: selectedProperty.property_id,
+        offer_amount: offerData.amount,
+        client_name: offerData.name,
+        client_email: offerData.email,
+        client_phone: offerData.phone,
+        message: offerData.message
+      };
+
+      const response = await axios.post(`${BACKEND_URL}/v1/offers/`, offerPayload);
+
+      if (response.status === 200 || response.status === 201) {
+        alert('Offer submitted successfully!');
+        closeModal();
+      }
+    } catch (error) {
+      console.error('Error submitting offer:', error);
+      alert('Failed to submit offer. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setOfferData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   return (
     <div>
@@ -185,8 +257,11 @@ const Properties = () => {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-bold text-accent">{property.price}</span>
-                      <button className="text-sm text-white bg-accent hover:bg-accent/90 px-3 py-1 rounded transition-colors">
-                        View Details
+                      <button
+                        className="text-sm text-white bg-accent hover:bg-accent/90 px-3 py-1 rounded transition-colors"
+                        onClick={() => handleMakeOffer(property)}
+                      >
+                        Make an offer
                       </button>
                     </div>
                   </div>
@@ -239,6 +314,154 @@ const Properties = () => {
             )}
           </div>
         </section>
+
+        {/* Make Offer Modal */}
+        {isModalOpen && selectedProperty && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b border-festari-200">
+                <h3 className="text-xl font-bold text-festari-900">Make an Offer</h3>
+                <button
+                  onClick={closeModal}
+                  className="text-festari-500 hover:text-festari-700 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              {/* Property Info */}
+              <div className="p-6 border-b border-festari-200">
+                <div className="flex gap-4">
+                  <img
+                    src={selectedProperty.image}
+                    alt={selectedProperty.title}
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
+                  <div>
+                    <h4 className="font-semibold text-festari-900">{selectedProperty.title}</h4>
+                    <p className="text-sm text-festari-600">{selectedProperty.location}</p>
+                    <p className="text-lg font-bold text-accent">{selectedProperty.price}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Offer Form */}
+              <form onSubmit={handleOfferSubmit} className="p-6">
+                <div className="space-y-4">
+                  {/* Offer Amount */}
+                  <div>
+                    <label className="block text-sm font-medium text-festari-700 mb-1">
+                      Offer Amount *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="amount"
+                        value={offerData.amount}
+                        onChange={handleInputChange}
+                        placeholder="Enter your offer amount"
+                        className="w-full pl-10 pr-4 py-2 border border-festari-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                        required
+                      />
+                      <DollarSign size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-festari-400" />
+                    </div>
+                  </div>
+
+                  {/* Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-festari-700 mb-1">
+                      Full Name *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="name"
+                        value={offerData.name}
+                        onChange={handleInputChange}
+                        placeholder="Your full name"
+                        className="w-full pl-10 pr-4 py-2 border border-festari-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                        required
+                      />
+                      <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-festari-400" />
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-festari-700 mb-1">
+                      Email Address *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="email"
+                        name="email"
+                        value={offerData.email}
+                        onChange={handleInputChange}
+                        placeholder="your.email@example.com"
+                        className="w-full pl-10 pr-4 py-2 border border-festari-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                        required
+                      />
+                      <Mail size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-festari-400" />
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div>
+                    <label className="block text-sm font-medium text-festari-700 mb-1">
+                      Phone Number *
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={offerData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Your phone number"
+                        className="w-full pl-10 pr-4 py-2 border border-festari-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+                        required
+                      />
+                      <Phone size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-festari-400" />
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label className="block text-sm font-medium text-festari-700 mb-1">
+                      Additional Message (Optional)
+                    </label>
+                    <textarea
+                      name="message"
+                      value={offerData.message}
+                      onChange={handleInputChange}
+                      placeholder="Any additional details about your offer..."
+                      rows={4}
+                      className="w-full px-4 py-2 border border-festari-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <div className="flex gap-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="flex-1 px-4 py-2 border border-festari-300 text-festari-700 rounded-lg hover:bg-festari-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-2 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit Offer'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </div>

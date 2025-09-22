@@ -1,35 +1,13 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  GraduationCap,
-  BookOpen,
-  FileText,
-  User,
-  Clock,
-  Calendar,
-  ExternalLink,
-  CheckCircle,
   HardHat,
   Search,
   Leaf,
-  Database,
-  Shield,
-  WrenchIcon,
-  FileCheck,
-  Wrench,
-  Microscope,
-  BookMarked,
-  PenTool,
-  Printer,
-  FileSpreadsheet,
-  School,
-  Briefcase,
-  Presentation,
-  Filter,
   Stethoscope,
   Gavel,
   Users,
@@ -39,17 +17,15 @@ import {
   HardHatIcon,
   ChartLine
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ServiceGrid from '@/components/common/ServiceGrid';
 import ServiceCard from '@/components/common/ServiceCard';
-import ServiceCategory from '@/components/common/ServiceCategory';
 import ConsultationRequestForm from '@/components/common/ConsultationRequestForm';
 import { BACKEND_URL } from '@/configs/constants';
 import axios from 'axios';
-import { log } from 'console';
+import Lottie from 'lottie-react';
+import festariLoading from "../assets/festariLoading.json"
 
 const researchIconMapper = {
   Helmet: HardHat,
@@ -67,9 +43,11 @@ const Research = () => {
   const [publicationTag, setPublicationTag] = useState('All');
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [researchServices, setResearchService] = useState<any[]>([]);
   const [courses, setCourses] = useState<any[]>([])
   const [publications, setPublications] = useState<any[]>([])
+  const lottieRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +69,8 @@ const Research = () => {
 
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -141,6 +121,26 @@ const Research = () => {
 
   const allTags = Array.from(new Set(publications.flatMap(pub => pub.tags || [])));
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow mt-20">
+
+          <div>
+            <Lottie
+              size={10}
+              lottieRef={lottieRef}
+              animationData={festariLoading}
+              loop={false}
+            />
+
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -172,7 +172,6 @@ const Research = () => {
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" size={18} />
               </div>
-
               {filteredServices.length > 0 && (
                 <div className="mt-4 bg-white text-festari-900 rounded-lg shadow-lg p-4 max-h-60 overflow-y-auto absolute z-10 left-0 right-0 mx-auto max-w-xl">
                   <p className="text-sm font-medium text-festari-600 mb-2">
@@ -281,97 +280,6 @@ const Research = () => {
                     ))}
                 </div>
               </TabsContent>
-
-              <TabsContent value="courses" className="space-y-8">
-                <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
-                  <h2 className="text-2xl font-display font-bold text-festari-900">Educational Courses</h2>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-festari-600">Level:</span>
-                    <select
-                      className="p-2 border border-festari-200 rounded-md focus:outline-none focus:ring-1 focus:ring-accent text-sm"
-                      value={courseLevel}
-                      onChange={(e) => setCourseLevel(e.target.value)}
-                    >
-                      <option value="All">All Levels</option>
-                      <option value="Beginner">Beginner</option>
-                      <option value="Intermediate">Intermediate</option>
-                      <option value="Advanced">Advanced</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {filteredCourses.map((course) => (
-                    <div
-                      key={course.id}
-                      className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col"
-                    >
-                      <div className="h-48 relative overflow-hidden">
-                        <img
-                          src={`https://admin.festarigroup.com/${course.course_flyer}`}
-                          alt={course.course_name}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute top-4 right-4 bg-accent text-white text-xs font-bold py-1 px-2 rounded">
-                          {course.level}
-                        </div>
-                      </div>
-                      <div className="p-6 flex-1 flex flex-col">
-                        <h3 className="text-lg font-semibold text-festari-900 mb-2">
-                          {course.title}
-                        </h3>
-                        <p className="text-sm text-festari-600 mb-4">
-                          {course.description}
-                        </p>
-                        <div className="grid grid-cols-2 gap-3 mb-4">
-                          <div className="flex items-center gap-2">
-                            <User size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">{course.instructor}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Clock size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">{course.duration}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Calendar size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">Starts: {course.startDate}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <GraduationCap size={14} className="text-festari-500" />
-                            <span className="text-sm text-festari-700">{course.enrolled} enrolled</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-festari-100">
-                          <span className="text-lg font-bold text-accent">{course.price}</span>
-                          <button className="text-sm text-white bg-accent hover:bg-accent/90 px-4 py-2 rounded transition-colors">
-                            Enroll Now
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {filteredCourses.length === 0 && (
-                  <div className="bg-white rounded-lg p-8 text-center">
-                    <div className="flex justify-center mb-4">
-                      <GraduationCap size={48} className="text-festari-300" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-festari-800 mb-2">No courses found</h3>
-                    <p className="text-festari-600 mb-4">Try adjusting your search criteria or filters</p>
-                    <button
-                      className="btn-primary"
-                      onClick={() => {
-                        setSearchQuery('');
-                        setCourseLevel('All');
-                      }}
-                    >
-                      Reset Filters
-                    </button>
-                  </div>
-                )}
-              </TabsContent>
-
 
               <TabsContent value="consultation" className="space-y-8">
                 <div className="max-w-3xl mx-auto">

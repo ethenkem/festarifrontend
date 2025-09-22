@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import Lottie from "lottie-react";
+import festariLoading from "../assets/festariLoading.json"
 import {
   CalendarDays,
   MapPin,
@@ -31,199 +33,6 @@ import { BACKEND_URL } from '@/configs/constants';
 import { FounderProfile } from '@/types/foundersData';
 import { Helmet } from 'react-helmet-async';
 
-// Dr. Festus Kunkyin-Saadaari data
-//const founderData = {
-//  name: "Dr. Festus Kunkyin-Saadaari",
-//  title: "CEO and Founder, Festari Group Limited",
-//  bio: "Dr. Festus Kunkyin-Saadaari is the CEO and founder of Festari Group Limited, a company that provides innovative and sustainable solutions for the mining industry. He has over three years of experience as a lecturer and researcher at the University of Mines and Technology (UMaT), Tarkwa, where he teaches and supervises students in mining engineering topics and projects.",
-//  longBio: "Dr. Festus Kunkyin-Saadaari holds a PhD and a BSc in Mining Engineering from UMaT, and has published several papers in reputable journals on mine reclamation and rehabilitation, rock mechanics and excavation stability, and the application of artificial intelligence and machine learning techniques to mining engineering systems. He is also a member of professional societies such as the ISRM, ARMA, and IAENG. He is passionate about advancing the knowledge and practice of mining engineering, and creating positive social and environmental impacts through his work.",
-//  profileImage: "/lovable-uploads/a6a7726e-4c17-47d2-beef-4193ca9b8444.png",
-//  location: "Tarkwa, Ghana",
-//  expertise: [
-//    "Geotechnical Engineering", 
-//    "Rock Mechanics", 
-//    "Mining Engineering", 
-//    "Artificial Intelligence", 
-//    "Machine Learning", 
-//    "Slope Stability Analysis",
-//    "Rock Mass Characterization",
-//    "Soil Dynamics Testing",
-//    "Visualization"
-//  ],
-//  organizations: [
-//    { name: "Canadian Institute of Mining, Metallurgy and Petroleum", role: "Member", period: "Feb 2020 - Present" },
-//    { name: "International Society for Rock Mechanics (ISRM)", role: "Member", period: "Mar 2019 - Present" },
-//    { name: "American Rock Mechanics Association (ARMA)", role: "Member", period: "Apr 2020 - Present" },
-//    { name: "International Association of Engineers (IAENG)", role: "Member", period: "Jan 2021 - Present" }
-//  ],
-//  certifications: [
-//    { name: "Diploma in Research Skills", issuer: "UniAthena", date: "Jan 2023", id: "8675-4134-1122" },
-//    { name: "Lean Six Sigma White Belt Certification", issuer: "MF Treinamentos", date: "Jan 2023", id: "FLQLJQQQWT-QDLQRDKJ-WNHTKWKQNZ" }
-//  ],
-//  stats: {
-//    publications: 5,
-//    connections: 3,
-//    yearsExperience: 6
-//  },
-//  education: [
-//    {
-//      degree: "Ph.D. in Mining Engineering (Rock Mechanics Major)",
-//      institution: "University of Mines and Technology, Tarkwa",
-//      year: "2018 - 2021",
-//      activities: "Canadian Institute of Mining, Metallurgy and Petroleum (Member), GRASAG (Member)"
-//    },
-//    {
-//      degree: "B.Sc. in Mining Engineering",
-//      institution: "University of Mines and Technology, Tarkwa",
-//      year: "2011 - 2015",
-//      activities: "Mining and Mineral Engineering Student Association, Northern Student Union"
-//    },
-//    {
-//      degree: "High School Science, General",
-//      institution: "Nandom Secondary School",
-//      year: "2007 - 2011",
-//      activities: "Drama Club, Science Club, Scripture Union"
-//    }
-//  ],
-//  experience: [
-//    {
-//      position: "CEO and Founder",
-//      company: "Festari Group Limited",
-//      period: "Nov 2023 - Present",
-//      location: "Western Region, Ghana",
-//      description: "Leading a company that provides innovative and sustainable solutions for the mining industry."
-//    },
-//    {
-//      position: "Lecturer/Researcher",
-//      company: "University of Mines and Technology, Tarkwa",
-//      period: "Dec 2021 - Present",
-//      location: "Tarkwa, Western, Ghana",
-//      description: "Teaching and supervising students in mining engineering topics and projects."
-//    },
-//    {
-//      position: "Postdoctoral Researcher",
-//      company: "Missouri University of Science and Technology",
-//      period: "Jan 2022 - Dec 2022",
-//      location: "United States",
-//      description: "Conducted research in mining engineering and rock mechanics."
-//    },
-//    {
-//      position: "Postgraduate Assistant",
-//      company: "University of Mines and Technology, Tarkwa",
-//      period: "Feb 2020 - Nov 2021",
-//      location: "Tarkwa, Ghana",
-//      description: "Assisted in teaching and research activities."
-//    },
-//    {
-//      position: "Demonstrator",
-//      company: "University of Mines and Technology, Tarkwa",
-//      period: "Jun 2018 - Jan 2020",
-//      location: "Tarkwa, Ghana",
-//      description: "Supported laboratory sessions and demonstrations for students."
-//    },
-//    {
-//      position: "Proprietor",
-//      company: "Saadaari International Basic School",
-//      period: "Sep 2004 - Dec 2021",
-//      location: "Tarkwa, Ghana",
-//      description: "Founded and managed an educational institution providing home tutorship."
-//    },
-//    {
-//      position: "Teacher",
-//      company: "New Excellence International Basic School",
-//      period: "Jun 2017 - Aug 2018",
-//      location: "Tarkwa, Ghana",
-//      description: "Taught Ghanaian Language (Fante) and Information Communication and Technology for Primary and JHS students."
-//    },
-//    {
-//      position: "Fatigue Monitoring Engineer - Graduate Trainee",
-//      company: "GOLD FIELDS",
-//      period: "Sep 2016 - Dec 2016",
-//      location: "Tarkwa, Ghana",
-//      description: "Tracked and monitored fatigue videos/events, alerted operators who were fatigued, and reported fatigued operators to supervisors."
-//    },
-//    {
-//      position: "Graduate Mining Engineer",
-//      company: "GOLD FIELDS",
-//      period: "Sep 2015 - Aug 2016",
-//      location: "Tarkwa, Ghana",
-//      description: "Worked as Pit Controller Dispatcher (Back up), ensuring road network was up to date and correct within the system."
-//    },
-//    {
-//      position: "Intern - Drill Rigs Offsider",
-//      company: "AngloGold Ashanti",
-//      period: "Jul 2014 - Sep 2014",
-//      location: "Tarkwa, Iduapriem",
-//      description: "Ensured rig operators drilled blast holes to the planned depth and reported any inconsistencies in drilling operations."
-//    }
-//  ],
-//  volunteerExperience: [
-//    {
-//      position: "Teacher",
-//      organization: "St. Andrew Junior High School",
-//      period: "Jul 2010 - Feb 2011",
-//      description: "Taught Science and Technology voluntarily to support education in the community."
-//    }
-//  ],
-//  publications: [
-//    {
-//      title: "A Comparative Study on the Application of Intelligent Models in the Estimation of Backbreak in Mine Blasting Operations",
-//      publisher: "American Journal of Science, Engineering and Technology",
-//      year: "2024",
-//      date: "Jan 18, 2024",
-//      authors: "Festus Kunkyin-Saadaari, Victor Kwaku Agadzie, Richard Gyebuni",
-//      link: "http://dx.doi.org/10.11648/j.ajset.20240901.11"
-//    },
-//    {
-//      title: "Maintaining production levels in underground mining operations during pandemics - a case study",
-//      publisher: "Journal of the Ghana Institution of Engineering (JGhIE)",
-//      year: "2024",
-//      date: "Mar 28, 2024",
-//      volume: "24",
-//      issue: "1",
-//      pages: "41-46",
-//      authors: "Festus Kunkyin-Saadaari, Richard Gyebuni, Afia Dufie Kwarteng Forkuoh",
-//      link: "http://dx.doi.org/10.56049/jghie.v24i1.138"
-//    },
-//    {
-//      title: "Slope stability assessment of some waste rock dumps at a typical gold mine in Ghana",
-//      publisher: "Nigerian Journal of Technology",
-//      year: "2023",
-//      date: "May 8, 2023",
-//      volume: "42",
-//      issue: "1",
-//      pages: "83-91",
-//      authors: "S.O. Sarpong, B.M. Olaleye, F. Kunkyin-Saadaari, G. Agyei",
-//      link: "http://dx.doi.org/10.4314/njt.v42i1.10"
-//    },
-//    {
-//      title: "A Feasibility Study on The Implementation of Neural Network Classifiers for Open Stope Design",
-//      publisher: "Geotechnical and Geological Engineering",
-//      year: "2021",
-//      date: "Jul 6, 2021",
-//      authors: "Amoussou Coffi Adoko, Festus Saadaari, Daniel Mireku-Gyimah, Askar Imashev",
-//      link: "http://dx.doi.org/10.1007/s10706-021-01915-8"
-//    },
-//    {
-//      title: "Development of a Stope Stability Prediction Model Using Ensemble Learning Techniques - A Case Study",
-//      publisher: "Ghana Mining Journal",
-//      year: "2020",
-//      date: "Dec 31, 2020",
-//      volume: "20",
-//      issue: "2",
-//      pages: "18-26",
-//      authors: "F. Saadaari Saadaari, D. Mireku-Gyimah, B. M. Olaleye",
-//      link: "http://dx.doi.org/10.4314/gm.v20i2.3",
-//      description: "The consequences of collapsed stopes can be dire in the mining industry. This can lead to the revocation of a mining license in most jurisdictions, especially when the harm costs lives. Therefore, as a mine planning and technical services engineer, it is imperative to estimate the stability status of stopes. This study has attempted to produce a stope stability prediction model adopted from stability graph using ensemble learning techniques."
-//    }
-//  ],
-//  contactInfo: {
-//    email: "festus@festari.com",
-//    phone: "+233 240699535",
-//    mobilePhone: "+1 5732026443"
-//  }
-//};
-//
 // Animation variants
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -249,6 +58,7 @@ const Founder = () => {
   const [activeTab, setActiveTab] = useState("about");
   const [founderData, setFounderData] = useState<FounderProfile>();
   const [loading, setLoading] = useState(true)
+  const lottieRef = useRef(null);
 
   useEffect(() => {
     const fetchFounderProfile = async () => {
@@ -268,7 +78,6 @@ const Founder = () => {
   return (
     <>
       <Helmet>
-
         <title>Meet the Founder of Festari Group Ltd</title>
         <meta
           name="description"
@@ -799,7 +608,14 @@ const Founder = () => {
                 </div>
               </div>
             </section>
-          </main> : null}
+          </main> : <div className='mt-20 px-7'>
+            <Lottie
+              size={10}
+              lottieRef={lottieRef}
+              animationData={festariLoading}
+              loop={false}
+            />
+          </div>}
         <Footer />
       </div>
     </>

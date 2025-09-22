@@ -32,44 +32,42 @@ const Index = () => {
 
   return (
     <>
+
       <Helmet>
         {/* Basic SEO */}
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Festari Group Ltd - Innovating Africa’s Future</title>
         <meta
           name="description"
-          content="Festari Group Ltd delivers innovative, multidisciplinary business solutions across real estate, agriculture, education, and strategic trade in Ghana and Africa."
-        />
-        <meta
-          name="keywords"
-          content="Festari Group, real estate, agriculture, education, trade, Ghana, Africa, sustainable business, innovation"
+          content="Festari Group Ltd delivers innovative business solutions in real estate, agriculture, education, and trade — driving sustainable growth in Africa."
         />
         <meta name="author" content="Festari Group Ltd" />
         <link rel="canonical" href="https://www.festarigroup.com" />
         <meta name="robots" content="index, follow" />
 
-        {/* Open Graph (Facebook/LinkedIn/WhatsApp) */}
+        {/* Open Graph */}
         <meta property="og:title" content="Festari Group Ltd - Innovating Africa’s Future" />
         <meta
           property="og:description"
-          content="Discover Festari Group’s expertise in real estate, agribusiness, trade, and education. Driving sustainable innovation across Africa."
+          content="Discover Festari Group’s expertise in real estate, agriculture, education, and trade — transforming Africa’s future sustainably."
         />
         <meta property="og:image" content="https://www.festarigroup.com/og-image.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://www.festarigroup.com" />
         <meta property="og:type" content="website" />
-        <meta property="og:locale" content="en_GB" />
+        <meta property="og:locale" content="en_GH" />
         <meta property="og:site_name" content="Festari Group Ltd" />
 
-        {/* Twitter Cards */}
+        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Festari Group Ltd - Innovating Africa’s Future" />
         <meta
           name="twitter:description"
-          content="Explore Festari Group’s business solutions in real estate, agriculture, education, and trade — transforming Africa’s economy sustainably."
+          content="Explore Festari Group’s business solutions in real estate, agriculture, education, and trade — innovating across Africa."
         />
         <meta name="twitter:image" content="https://www.festarigroup.com/og-image.jpg" />
-        <meta name="twitter:site" content="@festari" />
         <meta name="twitter:url" content="https://www.festarigroup.com" />
       </Helmet>
       <div className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
