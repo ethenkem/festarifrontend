@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
 import { useAuth } from '@/context/auth-context';
+import { useNavigate } from 'react-router-dom';
 
-const UpdatePropertySubmissionModal = ({ isOpen, onClose, propertyData }) => {
+const UpdatePropertySubmissionModal = ({ isOpen, onClose, propertyData, fetchProperties }) => {
   const [formData, setFormData] = useState({
     title: '',
     price: '',
@@ -24,6 +25,7 @@ const UpdatePropertySubmissionModal = ({ isOpen, onClose, propertyData }) => {
   const [dragActive, setDragActive] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
   // 🔥 Sync formData whenever propertyData changes
   useEffect(() => {
     if (propertyData) {
@@ -105,14 +107,13 @@ const UpdatePropertySubmissionModal = ({ isOpen, onClose, propertyData }) => {
     });
 
     try {
-      const res = await axios.put(
+      const res = await axios.patch(
         `${BACKEND_URL}/v1/real-estates/my-listings/${propertyData.property_id}/update/`, submitData, {
         headers: {
           Authorization: `Bearer ${userData.access}`
         }
       })
       console.log(res.data)
-      // Reset form and close modal
       setFormData({
         title: '',
         price: '',
@@ -127,6 +128,7 @@ const UpdatePropertySubmissionModal = ({ isOpen, onClose, propertyData }) => {
 
       // Show success message (you can replace this with your toast system)
       alert('Property submitted successfully! It will be reviewed before being published.');
+      await fetchProperties();
     } catch (error) {
       console.error('Error submitting property:', error);
       alert('Error submitting property. Please try again.');

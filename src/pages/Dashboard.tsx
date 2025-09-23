@@ -17,12 +17,15 @@ import { AuthResponse } from '@/types/auths';
 import UpdatePropertySubmissionModal from '@/components/property/UpdatePropertyModal';
 import Lottie from 'lottie-react';
 import festariLoading from "../assets/loading colour.json"
+import { useVerifyToken } from '@/hooks/use-verify-token';
+import { PageLoading } from '@/App';
 
 
 
 const Dashboard = () => {
   // State for managing active tab
   const [activeTab, setActiveTab] = useState("overview");
+  const { loading } = useVerifyToken();
   const { toast } = useToast();
   const lottieRef = useRef(null);
   const [properties, setProperties] = useState([])
@@ -32,14 +35,16 @@ const Dashboard = () => {
   const [propertyData, setPropertyData] = useState({})
   const [loadingProperties, setLoadingProperties] = useState(false)
   const [formData, setFormData] = useState({
-    firstName: user.user.first_name,
-    lastName: user.user.last_name,
-    email: user.user.email,
+    firstName: user?.user?.first_name,
+    lastName: user?.user?.last_name,
+    email: user?.user?.email,
     profilePicture: null
   });
   const [previewImage, setPreviewImage] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [unVerifiedProperties, setUnVerifiedProperties] = useState([])
+  const { verifyToken, loading: verifyTokenLoading } = useVerifyToken()
   const navigate = useNavigate();
 
   const handlePropertyUpdate = (property) => {
@@ -64,6 +69,7 @@ const Dashboard = () => {
     const data = await response.json();
     console.log(data)
     setProperties(data)
+    setUnVerifiedProperties(data.filter(property => property.is_approved === false))
     setLoadingProperties(false)
   }
 
@@ -150,6 +156,10 @@ const Dashboard = () => {
   const handleAddPropertyClick = () => {
     setShowAddPropertyModal(true);
   };
+
+  if (loading) {
+    return <PageLoading />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -275,11 +285,17 @@ const Dashboard = () => {
                       <div className="bg-festari-100 p-2 rounded-full">
                         <Building size={20} className="text-festari-accent" />
                       </div>
-                      <div>
-                        <p className="text-sm font-medium">Property Viewing Scheduled</p>
-                        <p className="text-xs text-muted-foreground">You scheduled a viewing for Luxury Apartment in Downtown</p>
-                        <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
-                      </div>
+                      {unVerifiedProperties.length == 0 ? (
+                        <div>
+                          <p>No properties awaiting approval</p>
+                        </div>
+                      ) : (unVerifiedProperties.map((item) =>
+                        <div>
+                          <p className="text-sm font-medium">{item.title}</p>
+                          <p className="text-xs text-muted-foreground">{item.description}</p>
+                          <p className="text-xs text-muted-foreground mt-1">{item.location}</p>
+                        </div>))
+                      }
                     </div>
                   </div>
                 </CardContent>
@@ -449,9 +465,10 @@ const Dashboard = () => {
                             <LogOut onClick={handleLogOut} size={16} /> Sign Out
                           </button>
 
-                          <button className="flex items-center gap-2 text-sm w-full p-2 hover:bg-gray-100 rounded-md text-red-600">
+                          {/*<button className="flex items-center gap-2 text-sm w-full p-2 hover:bg-gray-100 rounded-md text-red-600">
                             <Delete size={16} /> Delete Account
                           </button>
+                          */}
                         </div>
                       </div>
                     </div>
@@ -515,6 +532,7 @@ const Dashboard = () => {
         isOpen={showUpdatePropertyModal}
         onClose={() => setShowUpdatePropertyModal(false)}
         propertyData={propertyData}
+        fetchProperties={fetchMyProperties}
       />
       <Footer />
     </div>

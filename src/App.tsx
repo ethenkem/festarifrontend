@@ -19,6 +19,7 @@ import RefundAndCookies from "./pages/RefundAndCookies";
 import EmailVerificationNotice from "./pages/EmailVerificationNotice";
 import { AuthContextProvider } from "./context/auth-context";
 import Courses from "./pages/Courses";
+import { useVerifyToken } from "./hooks/use-verify-token";
 
 // Lazy load other pages for better performance
 const EstatesAgency = lazy(() => import("./pages/EstatesAgency"));
@@ -38,7 +39,7 @@ const Enterprise = lazy(() => import("./pages/Enterprise"));
 const ConsultationPage = lazy(() => import("./pages/ConsultationForm"));
 
 // Loading fallback component
-const PageLoading = () => (
+export const PageLoading = () => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="w-16 h-16 border-4 border-mikado border-t-transparent rounded-full animate-spin"></div>
   </div>
