@@ -95,18 +95,18 @@ const About = () => {
   ];
 
   // Current Projects
-  const currentProjects = [
-    {
-      title: "Organic Vegetable Farming Initiative",
-      description: "We are developing an organic vegetable farming project to supply healthy produce to local and institutional markets. Support is welcome in the form of technical expertise, irrigation systems, farm input sponsorship, and distribution partnerships.",
-      image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    },
-    {
-      title: "250-Student Hostel Facility",
-      description: "We are constructing a modern hostel facility to accommodate 250 university students in Tarkwa. We welcome partnerships for each construction phase, including materials support, co-development, or infrastructure funding.",
-      image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    },
-  ];
+  // const currentProjects = [
+  //   {
+  //     title: "Organic Vegetable Farming Initiative",
+  //     description: "We are developing an organic vegetable farming project to supply healthy produce to local and institutional markets. Support is welcome in the form of technical expertise, irrigation systems, farm input sponsorship, and distribution partnerships.",
+  //     image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+  //   },
+  //   {
+  //     title: "250-Student Hostel Facility",
+  //     description: "We are constructing a modern hostel facility to accommodate 250 university students in Tarkwa. We welcome partnerships for each construction phase, including materials support, co-development, or infrastructure funding.",
+  //     image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+  //   },
+  // ];
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -385,7 +385,7 @@ const About = () => {
           </section>
 
           {/* Projects Section */}
-          <section className="py-20 bg-gray-50">
+          {/* <section className="py-20 bg-gray-50">
             <div className="container-custom">
               <motion.div
                 className="text-center max-w-3xl mx-auto mb-16"
@@ -439,6 +439,7 @@ const About = () => {
               </motion.div>
             </div>
           </section>
+          */}
 
           {/* Contact CTA */}
           <section className="py-20 relative">

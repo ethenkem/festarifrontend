@@ -10,6 +10,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '@/configs/constants';
 import { storeUserInfo } from '@/utils/storage';
 import { useAuth } from '@/context/auth-context';
+import PasswordResetModal from '@/components/common/PasswordResetModal';
 
 const Login = () => {
   // State hooks for form fields and visibility toggle
@@ -17,6 +18,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false); // New state for modal
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login } = useAuth()
@@ -129,9 +131,14 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-festari-accent hover:text-festari-accent/80">
+                {/* Updated to open modal instead of navigating */}
+                <button
+                  type="button"
+                  onClick={() => setShowResetModal(true)}
+                  className="font-medium text-festari-accent hover:text-festari-accent/80"
+                >
                   Forgot your password?
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -161,6 +168,12 @@ const Login = () => {
       </main>
       {/* Footer component */}
       <Footer />
+
+      {/* Password Reset Modal */}
+      <PasswordResetModal
+        isOpen={showResetModal}
+        onClose={() => setShowResetModal(false)}
+      />
     </div>
   );
 };

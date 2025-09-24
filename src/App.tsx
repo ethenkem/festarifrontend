@@ -20,6 +20,7 @@ import EmailVerificationNotice from "./pages/EmailVerificationNotice";
 import { AuthContextProvider } from "./context/auth-context";
 import Courses from "./pages/Courses";
 import { useVerifyToken } from "./hooks/use-verify-token";
+import ResetPassword from "./pages/ResetPassword";
 
 // Lazy load other pages for better performance
 const EstatesAgency = lazy(() => import("./pages/EstatesAgency"));
@@ -72,6 +73,7 @@ const App = () => (
               {/* Contact is now directly imported, not lazy loaded */}
               <Route path="/contact" element={<Contact />} />
 
+              <Route path="/reset-password" element={<ResetPassword />} />
               {/* Lazy loaded routes */}
               <Route path="/estates/*" element={
                 <Suspense fallback={<PageLoading />}>
