@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building, BookOpen, Bell, User, Search, Calendar, Heart, Settings, LogOut, Plus, Delete, Camera, Save } from 'lucide-react';
+import { Building, BookOpen, Bell, User, Search, Calendar, Heart, Settings, LogOut, Plus, Delete, Camera, Save, KeyIcon } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { getUserInfo } from '@/utils/storage';
 import { useAuth } from '@/context/auth-context';
 import PropertySubmissionModal from '@/components/property/PropertySubmissionModal';
 import { BACKEND_URL } from '@/configs/constants';
@@ -44,7 +42,6 @@ const Dashboard = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [unVerifiedProperties, setUnVerifiedProperties] = useState([])
-  const { verifyToken, loading: verifyTokenLoading } = useVerifyToken()
   const navigate = useNavigate();
 
   const handlePropertyUpdate = (property) => {
@@ -465,10 +462,12 @@ const Dashboard = () => {
                             <LogOut onClick={handleLogOut} size={16} /> Sign Out
                           </button>
 
-                          {/*<button className="flex items-center gap-2 text-sm w-full p-2 hover:bg-gray-100 rounded-md text-red-600">
-                            <Delete size={16} /> Delete Account
+                          <button className="flex items-center gap-2 text-sm w-full p-2 hover:bg-gray-100 rounded-md text-green-500">
+                            <Link to="/change-password">
+                             Change Password
+                            </Link>
                           </button>
-                          */}
+
                         </div>
                       </div>
                     </div>
